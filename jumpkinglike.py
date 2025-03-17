@@ -6,7 +6,7 @@ x = 50
 y = 50
 width = 40
 height = 60
-vel = 5
+vel = 10
 pygame.display.set_mode((640,480))
 spielaktive = True
 while spielaktive:
