@@ -8,6 +8,7 @@ width = 40
 height = 60
 vel = 10
 pygame.display.set_mode((640,480))
+screen = pygame.display.set_mode((640,480))
 spielaktive = True
 while spielaktive:
     for event in pygame.event.get():
@@ -15,3 +16,5 @@ while spielaktive:
             spielaktive = False
 
     keys = pygame.key.get_pressed()
+    screen.fill(Weiss)
+    pygame.display.flip()
