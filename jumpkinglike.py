@@ -27,18 +27,26 @@ class Player:
         self.isjump = False
         self.jumpCount = 10
         self.gravity = 0.8
+        self.nextjump = 0
+        self.jump_cooldown = 1000
+
 
     def KeyPress(self):
         keys = pygame.key.get_pressed()
+        current_time = pygame.time.get_ticks()
+
+
+        if keys[pygame.K_SPACE] and not self.isjump and (current_time - self.nextjump) >= self.jump_cooldown:
+            self.isjump = True
+            self.jumpCount = 10
+            self.nextjump = current_time
+
         if keys[pygame.K_d]:
             self.x += self.v[0]
         if keys[pygame.K_a]:
             self.x -= self.v[0]
-        if keys[pygame.K_s]:
-            self.y += self.v[1]
-        if keys[pygame.K_SPACE] and not self.isjump:
-            self.isjump = True
-            self.jumpCount = 10
+        #if keys[pygame.K_s]:
+            #self.y += self.v[1]
 
         self.rect.x = self.x
         self.rect.y = self.y
