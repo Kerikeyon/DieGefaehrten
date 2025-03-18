@@ -29,6 +29,7 @@ class Player:
         self.gravity = 0.8
         self.nextjump = 0
         self.jump_cooldown = 1000
+        self.isOnPlatform = False
 
 
     def KeyPress(self):
@@ -36,18 +37,16 @@ class Player:
         current_time = pygame.time.get_ticks()
 
 
-        if keys[pygame.K_SPACE] and not self.isjump and (current_time - self.nextjump) >= self.jump_cooldown:
+        if keys[pygame.K_SPACE] and not self.isjump and (current_time - self.nextjump) >= self.jump_cooldown and self.isOnPlatform == True:
             self.isjump = True
             self.jumpCount = 10
             self.nextjump = current_time
-
         if keys[pygame.K_d]:
             self.x += self.v[0]
         if keys[pygame.K_a]:
             self.x -= self.v[0]
         #if keys[pygame.K_s]:
             #self.y += self.v[1]
-
         self.rect.x = self.x
         self.rect.y = self.y
 
@@ -66,7 +65,7 @@ class Player:
                 neg = 1
                 if self.jumpCount < 0:
                     neg = -1
-                self.y -= self.jumpCount ** 2 * 0.1 * neg
+                self.y -= self.jumpCount * 2 * 0.1 * neg
                 self.jumpCount -= 1
             else:
                 self.isjump = False
@@ -89,7 +88,10 @@ class Platform:
         self.h = height
         self.rect = pygame.Rect(self.x, self.y, self.w, self.h)
 
-list_platform = [Platform(SCHWARZ, Cx - 320, 455, 640, 50), Platform(SCHWARZ, 300, 100, 100, 80)]
+
+
+
+list_platform = [Platform(SCHWARZ, Cx - 320, 455, 640, 50), Platform(SCHWARZ, 300, 100, 100, 80), Platform(SCHWARZ, 150, 200, 100, 80)]
 player1 = Player(ROT, Cx - 25 , 50 , 50, 50)
 
 spielaktive = True
@@ -107,7 +109,7 @@ while spielaktive:
 
     player1.applyGravity()
     player1.jump()
-
+    player1.isOnPlatform = False
     # Kollisionen
     for platform in list_platform:
         if player1.rect.colliderect(platform.rect):
@@ -116,6 +118,8 @@ while spielaktive:
                 player1.y = platform.rect.y - player1.rect.h +0.5
                 player1.v[1] = 0
                 player1.v[1] = v0y
+                player1.isOnPlatform = True
+
             # kollision von unten
             elif player1.rect.y < (platform.rect.y + platform.rect.h) < (player1.rect.y + player1.rect.h):
                 player1.y = platform.rect.y + platform.rect.h
