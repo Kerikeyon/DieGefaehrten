@@ -34,7 +34,11 @@ class Player:
         self.rect = pygame.Rect(self.x, self.y, self.w, self.h)
         self.isjump = False
         self.jumpCount = 10
+<<<<<<< HEAD
         self.gravity = 0.5
+=======
+        self.gravity = 1
+>>>>>>> f8718bec547b0260d92c1e5cc315850457f2afa1
         self.nextjump = 0
         self.jump_cooldown = 1000
         self.isOnPlatform = False
