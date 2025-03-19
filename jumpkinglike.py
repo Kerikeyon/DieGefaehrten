@@ -18,6 +18,7 @@ ORANGE = (255, 140, 0)
 GELB = (255, 255, 0)
 GRÜN = (0, 255, 0)
 BLAU = (0, 0, 255)
+Hä = (56, 84, 120)
 
 INVINCIBLE = False
 LEBEN = 3
@@ -111,17 +112,29 @@ class Coin:
         self.y = y
         self.w = width
         self.h = height
-        self.rect = pygame.Rect(x,y,height,width)
+        self.rect = pygame.Rect(self.x,self.y,self.h,self.w)
     def draw(self):
         self.rect.topleft = (self.x, self.y)
         pygame.draw.rect(screen, GELB, self.rect)
+
+class Goal:
+    def __init__(self, farbe, x, y, width, height):
+        self.f = farbe
+        self.x = x
+        self.y = y
+        self.w = width
+        self.h = height
+        self.rect = pygame.Rect(self.x, self.y, self.h, self.w)
+    def draw(self):
+        self.rect.topleft = (self.x, self.y)
+        pygame.draw.rect(screen, Hä, self.rect)
 
 list_Coins = [
 Coin(GELB, 500, 75, 15, 15),
 Coin(GELB, 400, 180, 15, 15)
 ]
 
-farbe = [WEISS, SCHWARZ, ROT, ORANGE, GELB, GRÜN, BLAU]
+farbe = [WEISS, SCHWARZ, ROT, ORANGE, GELB, GRÜN, BLAU, Hä]
 list_platform = [Platform(SCHWARZ, 320, 455, 640, 50), Platform(SCHWARZ, 500, 100, 100, 80), Platform(SCHWARZ, 400, 200, 100, 80)]
 list_gegner = [Gegner(BLAU, Cx - 100, 100, 200, 200)]
 player1 = Player(farbe[2], Cx - 320 , 404 , 50, 50)
@@ -130,6 +143,7 @@ score = 0
 text = font.render('Score = ' + str(score), True, GRÜN)
 textRect = text.get_rect()
 textRect.center = (750, 50)
+goal1 = Goal(farbe[7], 700, 50, 50, 50)
 spielaktive = True
 while spielaktive:
     for event in pygame.event.get():
@@ -139,7 +153,8 @@ while spielaktive:
     player1.KeyPress()
     screen.fill(WEISS)
     pygame.draw.rect(screen, player1.f, [player1.x, player1.y, 50, 50])
-    pygame.draw.rect(screen, BLAU, [Cx-100, 100, 200, 200])
+    pygame.draw.rect(screen, BLAU, [Cx-100, 200, 50, 50])
+    goal1.draw()
 
     for i in range(len(list_Coins) - 1, -1, -1):
         if player1.rect.colliderect(list_Coins[i].rect):
@@ -147,7 +162,7 @@ while spielaktive:
             score += 1
             text = font.render('Score = ' + str(score), True, GRÜN)
             textRect = text.get_rect()
-            textRect.center = (750, 150)
+            textRect.center = (750, 50)
     player1.applyGravity()
     player1.jump()
     player1.isOnPlatform = False
@@ -194,13 +209,17 @@ while spielaktive:
     if INVINCIBLE == True:
         player1.f = farbe[3]
         currenttime = pygame.time.get_ticks()
-        if (currenttime - HITMOMENT )>= 1000:
+        if (currenttime - HITMOMENT )>= 500:
             INVINCIBLE = False
             player1.f = farbe[2]
 
     if LEBEN == 0:    
         LEBEN += 3
         player1 = Player(ROT, Cx - 25 , 405 , 50, 50)
+
+    if player1.rect.colliderect(goal1.rect):
+        player1 = Player(ROT, Cx - 25, 405, 50, 50)
+        pygame.draw.rect(screen, Coin.f, Coin.rect)
 
     screen.blit(text, textRect)
 
