@@ -1,5 +1,9 @@
+<<<<<<< Updated upstream
 import pygame as pygame
 import math
+=======
+import pygame as pygame  
+>>>>>>> Stashed changes
 
 #git add .
 #git commit -m "test"
@@ -10,10 +14,11 @@ clock = pygame.time.Clock()
 screen = pygame.display.set_mode((640, 480))
 screen_width , screen_height = screen.get_size()
 Cx , Cy = screen_width/2 , screen_height/2
-v0x, v0y = 5, 5
+vx, vy = 5, 5
 WEISS = (255, 255, 255)
 SCHWARZ = (0, 0, 0)
 ROT = (255, 0, 0)
+voll_kol_links, vol_kol_rechts = False, False
 
 class Player:
     def __init__(self, farbe, x, y, width, height):
@@ -22,7 +27,7 @@ class Player:
         self.y = y
         self.w = width
         self.h = height
-        self.v = pygame.Vector2(v0x, v0y)
+        self.v = pygame.Vector2(0, 0)
         self.rect = pygame.Rect(self.x, self.y, self.w, self.h)
         self.isjump = False
         self.jumpCount = 10
@@ -42,14 +47,32 @@ class Player:
             self.jumpCount = 10
             self.nextjump = current_time
         if keys[pygame.K_d]:
+            self.v[0] = vx
             self.x += self.v[0]
+        self.v[0] = 0
         if keys[pygame.K_a]:
+<<<<<<< Updated upstream
             self.x -= self.v[0]
         #if keys[pygame.K_s]:
             #self.y += self.v[1]
+=======
+            self.v[0] = -vx
+            self.x += self.v[0]
+        self.v[0] = 0
+        if keys[pygame.K_w]:
+            self.v[1] = -vy
+            self.y += self.v[1]
+        self.v[1] = 0
+        if keys[pygame.K_s]:
+            self.v[1] = vy
+            self.y += self.v[1]
+        self.v[1] = 0
+
+>>>>>>> Stashed changes
         self.rect.x = self.x
         self.rect.y = self.y
 
+<<<<<<< Updated upstream
 
     def applyGravity(self):
         if not self.isjump:
@@ -79,6 +102,8 @@ class Player:
 
 
 
+=======
+>>>>>>> Stashed changes
 class Platform:
     def __init__(self, farbe, x, y, width, height):
         self.f = farbe
@@ -107,16 +132,22 @@ while spielaktive:
     for platform in list_platform:
         pygame.draw.rect(screen, platform.f, platform.rect)
 
+<<<<<<< Updated upstream
     player1.applyGravity()
     player1.jump()
     player1.isOnPlatform = False
+=======
+    #player1.gravity()
+
+>>>>>>> Stashed changes
     # Kollisionen
     for platform in list_platform:
-        if player1.rect.colliderect(platform.rect):
-            # kollision von oben
-            if (player1.rect.y + player1.rect.h) > platform.rect.y  > player1.rect.y:
+         if player1.rect.colliderect(platform.rect):
+             #von links
+             if vx != 0 and (player1.y + player1.h) > platform.y:
                 player1.y = platform.rect.y - player1.rect.h +0.5
                 player1.v[1] = 0
+<<<<<<< Updated upstream
                 player1.v[1] = v0y
                 player1.isOnPlatform = True
 
@@ -137,6 +168,9 @@ while spielaktive:
                 player1.v[0] = v0x
 
     player1.resetJump()
+=======
+
+>>>>>>> Stashed changes
     clock.tick(60)
 
     pygame.display.flip()
