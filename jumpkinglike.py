@@ -1,9 +1,5 @@
-<<<<<<< Updated upstream
 import pygame as pygame
 import math
-=======
-import pygame as pygame  
->>>>>>> Stashed changes
 
 #git add .
 #git commit -m "test"
@@ -11,14 +7,21 @@ import pygame as pygame
 
 pygame.init()
 clock = pygame.time.Clock()
-screen = pygame.display.set_mode((640, 480))
+screen = pygame.display.set_mode((1500, 750))
 screen_width , screen_height = screen.get_size()
 Cx , Cy = screen_width/2 , screen_height/2
-vx, vy = 5, 5
+v0x, v0y = 5, 5
 WEISS = (255, 255, 255)
 SCHWARZ = (0, 0, 0)
 ROT = (255, 0, 0)
-voll_kol_links, vol_kol_rechts = False, False
+ORANGE = (255, 140, 0)
+GELB = (255, 255, 0)
+GRÜN = (0, 255, 0)
+BLAU = (0, 0, 255)
+Hä = (56, 84, 120)
+
+INVINCIBLE = False
+LEBEN = 3
 
 class Player:
     def __init__(self, farbe, x, y, width, height):
@@ -31,7 +34,7 @@ class Player:
         self.rect = pygame.Rect(self.x, self.y, self.w, self.h)
         self.isjump = False
         self.jumpCount = 10
-        self.gravity = 0.8
+        self.gravity = 0.5
         self.nextjump = 0
         self.jump_cooldown = 1000
         self.isOnPlatform = False
@@ -40,45 +43,27 @@ class Player:
     def KeyPress(self):
         keys = pygame.key.get_pressed()
         current_time = pygame.time.get_ticks()
-
-
         if keys[pygame.K_SPACE] and not self.isjump and (current_time - self.nextjump) >= self.jump_cooldown and self.isOnPlatform == True:
             self.isjump = True
             self.jumpCount = 10
             self.nextjump = current_time
         if keys[pygame.K_d]:
-            self.v[0] = vx
+            self.v[0] = 5
             self.x += self.v[0]
-        self.v[0] = 0
         if keys[pygame.K_a]:
-<<<<<<< Updated upstream
+            self.v[0] = 5
             self.x -= self.v[0]
         #if keys[pygame.K_s]:
             #self.y += self.v[1]
-=======
-            self.v[0] = -vx
-            self.x += self.v[0]
-        self.v[0] = 0
-        if keys[pygame.K_w]:
-            self.v[1] = -vy
-            self.y += self.v[1]
-        self.v[1] = 0
-        if keys[pygame.K_s]:
-            self.v[1] = vy
-            self.y += self.v[1]
-        self.v[1] = 0
-
->>>>>>> Stashed changes
         self.rect.x = self.x
         self.rect.y = self.y
 
-<<<<<<< Updated upstream
 
     def applyGravity(self):
         if not self.isjump:
             self.v[1] += self.gravity
         else:
-            self.v[1] = -10
+            self.v[1] = -7.5
         self.y += self.v[1]
         self.rect.y = self.y
 
@@ -102,8 +87,6 @@ class Player:
 
 
 
-=======
->>>>>>> Stashed changes
 class Platform:
     def __init__(self, farbe, x, y, width, height):
         self.f = farbe
@@ -114,11 +97,55 @@ class Platform:
         self.rect = pygame.Rect(self.x, self.y, self.w, self.h)
 
 
+class Gegner:
+    def __init__(self, farbe, x, y, width, height):
+        self.f = farbe
+        self.x = x
+        self.y = y
+        self.w = width
+        self.h = height
+        self.rect = pygame.Rect(self.x, self.y, self.w, self.h) 
 
 
-list_platform = [Platform(SCHWARZ, Cx - 320, 455, 640, 50), Platform(SCHWARZ, 300, 100, 100, 80), Platform(SCHWARZ, 150, 200, 100, 80)]
-player1 = Player(ROT, Cx - 25 , 50 , 50, 50)
+class Coin:
+    def __init__(self, farbe, x, y, width, height):
+        self.f = farbe
+        self.x = x
+        self.y = y
+        self.w = width
+        self.h = height
+        self.rect = pygame.Rect(self.x,self.y,self.h,self.w)
+    def draw(self):
+        self.rect.topleft = (self.x, self.y)
+        pygame.draw.rect(screen, GELB, self.rect)
 
+class Goal:
+    def __init__(self, farbe, x, y, width, height):
+        self.f = farbe
+        self.x = x
+        self.y = y
+        self.w = width
+        self.h = height
+        self.rect = pygame.Rect(self.x, self.y, self.h, self.w)
+    def draw(self):
+        self.rect.topleft = (self.x, self.y)
+        pygame.draw.rect(screen, Hä, self.rect)
+
+list_Coins = [
+Coin(GELB, 500, 75, 15, 15),
+Coin(GELB, 400, 180, 15, 15)
+]
+
+farbe = [WEISS, SCHWARZ, ROT, ORANGE, GELB, GRÜN, BLAU, Hä]
+list_platform = [Platform(SCHWARZ, 320, 455, 640, 50), Platform(SCHWARZ, 500, 100, 100, 80), Platform(SCHWARZ, 400, 200, 100, 80)]
+list_gegner = [Gegner(BLAU, Cx - 100, 100, 200, 200)]
+player1 = Player(farbe[2], Cx - 320 , 404 , 50, 50)
+font = pygame.font.Font('freesansbold.ttf', 32)
+score = 0
+text = font.render('Score = ' + str(score), True, GRÜN)
+textRect = text.get_rect()
+textRect.center = (750, 50)
+goal1 = Goal(farbe[7], 700, 50, 50, 50)
 spielaktive = True
 while spielaktive:
     for event in pygame.event.get():
@@ -127,50 +154,82 @@ while spielaktive:
 
     player1.KeyPress()
     screen.fill(WEISS)
+    pygame.draw.rect(screen, player1.f, [player1.x, player1.y, 50, 50])
+    pygame.draw.rect(screen, BLAU, [Cx-100, 200, 50, 50])
+    goal1.draw()
 
-    pygame.draw.rect(screen, ROT, [player1.x, player1.y, 50, 50])
-    for platform in list_platform:
-        pygame.draw.rect(screen, platform.f, platform.rect)
-
-<<<<<<< Updated upstream
+    for i in range(len(list_Coins) - 1, -1, -1):
+        if player1.rect.colliderect(list_Coins[i].rect):
+            del list_Coins[i]
+            score += 1
+            text = font.render('Score = ' + str(score), True, GRÜN)
+            textRect = text.get_rect()
+            textRect.center = (750, 50)
     player1.applyGravity()
     player1.jump()
     player1.isOnPlatform = False
-=======
-    #player1.gravity()
 
->>>>>>> Stashed changes
     # Kollisionen
     for platform in list_platform:
-         if player1.rect.colliderect(platform.rect):
-             #von links
-             if vx != 0 and (player1.y + player1.h) > platform.y:
+        if player1.rect.colliderect(platform.rect):
+
+                        # kollision von oben
+            if (player1.rect.y + player1.rect.h) > platform.rect.y  > player1.rect.y:
                 player1.y = platform.rect.y - player1.rect.h +0.5
                 player1.v[1] = 0
-<<<<<<< Updated upstream
-                player1.v[1] = v0y
+                player1.v[0] = v0x
                 player1.isOnPlatform = True
-
             # kollision von unten
             elif player1.rect.y < (platform.rect.y + platform.rect.h) < (player1.rect.y + player1.rect.h):
                 player1.y = platform.rect.y + platform.rect.h
                 player1.v[1] = 0
-                player1.v[1] = v0y
-            # kollision von links
+                player1.v[0] = v0x
+            
+                        # kollision von links
             elif (player1.rect.x + player1.rect.w) > platform.rect.x > player1.rect.x:
                 player1.x = platform.rect.x - player1.rect.w
                 player1.v[0] = 0
-                player1.v[0] = v0x
+                player1.v[1] = 0
+
             # kollision von rechts
             elif player1.rect.x < (platform.rect.x + platform.rect.w) < (player1.rect.x + player1.rect.w):
                 player1.x = platform.rect.x + platform.rect.w
                 player1.v[0] = 0
-                player1.v[0] = v0x
+                player1.v[1] = 0
+
+
+
 
     player1.resetJump()
-=======
+    for platform in list_platform:
+        pygame.draw.rect(screen, platform.f, platform.rect)
 
->>>>>>> Stashed changes
+    for Coin  in list_Coins:
+        pygame.draw.rect(screen, Coin.f, Coin.rect)
+
+    # Kollision Gegner
+    if player1.rect.colliderect(list_gegner[0]) and INVINCIBLE == False:
+        INVINCIBLE = True
+        LEBEN -= 1
+        HITMOMENT = pygame.time.get_ticks()
+        
+    if INVINCIBLE == True:
+        player1.f = farbe[3]
+        currenttime = pygame.time.get_ticks()
+        if (currenttime - HITMOMENT )>= 500:
+            INVINCIBLE = False
+            player1.f = farbe[2]
+
+    if LEBEN == 0:    
+        LEBEN += 3
+        player1 = Player(ROT, Cx - 25 , 405 , 50, 50)
+
+    if player1.rect.colliderect(goal1.rect):
+        player1 = Player(ROT, Cx - 25, 405, 50, 50)
+        pygame.draw.rect(screen, Coin.f, Coin.rect)
+
+    screen.blit(text, textRect)
+
     clock.tick(60)
 
     pygame.display.flip()
