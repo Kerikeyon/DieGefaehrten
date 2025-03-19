@@ -7,13 +7,15 @@ import math
 
 pygame.init()
 clock = pygame.time.Clock()
-screen = pygame.display.set_mode((640, 480))
+screen = pygame.display.set_mode((1500, 750))
 screen_width , screen_height = screen.get_size()
 Cx , Cy = screen_width/2 , screen_height/2
 v0x, v0y = 5, 5
 WEISS = (255, 255, 255)
 SCHWARZ = (0, 0, 0)
 ROT = (255, 0, 0)
+GELB = (255, 255, 0)
+GRÜN = (0, 255, 0)
 
 class Player:
     def __init__(self, farbe, x, y, width, height):
@@ -26,7 +28,7 @@ class Player:
         self.rect = pygame.Rect(self.x, self.y, self.w, self.h)
         self.isjump = False
         self.jumpCount = 10
-        self.gravity = 0.8
+        self.gravity = 1
         self.nextjump = 0
         self.jump_cooldown = 1000
         self.isOnPlatform = False
@@ -35,8 +37,6 @@ class Player:
     def KeyPress(self):
         keys = pygame.key.get_pressed()
         current_time = pygame.time.get_ticks()
-
-
         if keys[pygame.K_SPACE] and not self.isjump and (current_time - self.nextjump) >= self.jump_cooldown and self.isOnPlatform == True:
             self.isjump = True
             self.jumpCount = 10
@@ -55,7 +55,7 @@ class Player:
         if not self.isjump:
             self.v[1] += self.gravity
         else:
-            self.v[1] = -10
+            self.v[1] = -7.5
         self.y += self.v[1]
         self.rect.y = self.y
 
@@ -88,12 +88,29 @@ class Platform:
         self.h = height
         self.rect = pygame.Rect(self.x, self.y, self.w, self.h)
 
+class Coin:
+    def __init__(self, farbe, x, y, width, height):
+        self.f = farbe
+        self.x = x
+        self.y = y
+        self.w = width
+        self.h = height
+        self.rect = pygame.Rect(x,y,height,width)
+    def draw(self):
+        self.rect.topleft = (self.x, self.y)
+        pygame.draw.rect(screen, GELB, self.rect)
 
-
-
-list_platform = [Platform(SCHWARZ, Cx - 320, 455, 640, 50), Platform(SCHWARZ, 300, 100, 100, 80), Platform(SCHWARZ, 150, 200, 100, 80)]
-player1 = Player(ROT, Cx - 25 , 50 , 50, 50)
-
+list_Coins = [
+Coin(GELB, 500, 75, 15, 15),
+Coin(GELB, 400, 180, 15, 15)
+]
+list_platform = [Platform(SCHWARZ, 320, 455, 640, 50), Platform(SCHWARZ, 500, 100, 100, 80), Platform(SCHWARZ, 400, 200, 100, 80)]
+player1 = Player(ROT, Cx - 320 , 404 , 50, 50)
+font = pygame.font.Font('freesansbold.ttf', 32)
+score = 0
+text = font.render('Score = ' + str(score), True, GRÜN)
+textRect = text.get_rect()
+textRect.center = (750, 50)
 spielaktive = True
 while spielaktive:
     for event in pygame.event.get():
@@ -102,14 +119,20 @@ while spielaktive:
 
     player1.KeyPress()
     screen.fill(WEISS)
-
     pygame.draw.rect(screen, ROT, [player1.x, player1.y, 50, 50])
-    for platform in list_platform:
-        pygame.draw.rect(screen, platform.f, platform.rect)
 
+
+    for i in range(len(list_Coins) - 1, -1, -1):
+        if player1.rect.colliderect(list_Coins[i].rect):
+            del list_Coins[i]
+            score += 1
+            text = font.render('Score = ' + str(score), True, GRÜN)
+            textRect = text.get_rect()
+            textRect.center = (750, 150)
     player1.applyGravity()
     player1.jump()
     player1.isOnPlatform = False
+
     # Kollisionen
     for platform in list_platform:
         if player1.rect.colliderect(platform.rect):
@@ -137,6 +160,14 @@ while spielaktive:
                 player1.v[0] = v0x
 
     player1.resetJump()
+    for platform in list_platform:
+        pygame.draw.rect(screen, platform.f, platform.rect)
+
+    for Coin  in list_Coins:
+        pygame.draw.rect(screen, Coin.f, Coin.rect)
+
+    screen.blit(text, textRect)
+
     clock.tick(60)
 
     pygame.display.flip()
