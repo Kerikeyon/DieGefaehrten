@@ -14,8 +14,13 @@ v0x, v0y = 5, 5
 WEISS = (255, 255, 255)
 SCHWARZ = (0, 0, 0)
 ROT = (255, 0, 0)
+ORANGE = (255, 140, 0)
 GELB = (255, 255, 0)
 GRÜN = (0, 255, 0)
+BLAU = (0, 0, 255)
+
+INVINCIBLE = False
+LEBEN = 3
 
 class Player:
     def __init__(self, farbe, x, y, width, height):
@@ -88,6 +93,17 @@ class Platform:
         self.h = height
         self.rect = pygame.Rect(self.x, self.y, self.w, self.h)
 
+
+class Gegner:
+    def __init__(self, farbe, x, y, width, height):
+        self.f = farbe
+        self.x = x
+        self.y = y
+        self.w = width
+        self.h = height
+        self.rect = pygame.Rect(self.x, self.y, self.w, self.h) 
+
+
 class Coin:
     def __init__(self, farbe, x, y, width, height):
         self.f = farbe
@@ -104,8 +120,11 @@ list_Coins = [
 Coin(GELB, 500, 75, 15, 15),
 Coin(GELB, 400, 180, 15, 15)
 ]
+
+farbe = [WEISS, SCHWARZ, ROT, ORANGE, GELB, GRÜN, BLAU]
 list_platform = [Platform(SCHWARZ, 320, 455, 640, 50), Platform(SCHWARZ, 500, 100, 100, 80), Platform(SCHWARZ, 400, 200, 100, 80)]
-player1 = Player(ROT, Cx - 320 , 404 , 50, 50)
+list_gegner = [Gegner(BLAU, Cx - 100, 100, 200, 200)]
+player1 = Player(farbe[2], Cx - 320 , 404 , 50, 50)
 font = pygame.font.Font('freesansbold.ttf', 32)
 score = 0
 text = font.render('Score = ' + str(score), True, GRÜN)
@@ -119,8 +138,8 @@ while spielaktive:
 
     player1.KeyPress()
     screen.fill(WEISS)
-    pygame.draw.rect(screen, ROT, [player1.x, player1.y, 50, 50])
-
+    pygame.draw.rect(screen, player1.f, [player1.x, player1.y, 50, 50])
+    pygame.draw.rect(screen, BLAU, [Cx-100, 100, 200, 200])
 
     for i in range(len(list_Coins) - 1, -1, -1):
         if player1.rect.colliderect(list_Coins[i].rect):
@@ -165,6 +184,23 @@ while spielaktive:
 
     for Coin  in list_Coins:
         pygame.draw.rect(screen, Coin.f, Coin.rect)
+
+    # Kollision Gegner
+    if player1.rect.colliderect(list_gegner[0]) and INVINCIBLE == False:
+        INVINCIBLE = True
+        LEBEN -= 1
+        HITMOMENT = pygame.time.get_ticks()
+        
+    if INVINCIBLE == True:
+        player1.f = farbe[3]
+        currenttime = pygame.time.get_ticks()
+        if (currenttime - HITMOMENT )>= 1000:
+            INVINCIBLE = False
+            player1.f = farbe[2]
+
+    if LEBEN == 0:    
+        LEBEN += 3
+        player1 = Player(ROT, Cx - 25 , 405 , 50, 50)
 
     screen.blit(text, textRect)
 
