@@ -43,6 +43,9 @@ scaled_image_platform = pygame.transform.scale(Plattform_texture, (200, 70))
 texture_Player1 = pygame.image.load(r"Texturen\WorrierMain.png")
 scaled_image_Player1 = pygame.transform.scale(texture_Player1, (52, 52))
 
+texture_Player1_Hit = pygame.image.load(r"Texturen\WorrierMainBeschädigt.png")
+scaled_image_Player1_Hit = pygame.transform.scale(texture_Player1_Hit, (52, 52))
+
 texture_left_wall = pygame.image.load(r"Texturen\Linke Wand.png")
 texture_right_wall = pygame.image.load(r"Texturen\Rechte Wand.png")
 
@@ -192,11 +195,23 @@ while gameactive:
                 HITMOMENT = pygame.time.get_ticks()
 
     if INVINCIBLE:
+        player1.texture = scaled_image_Player1_Hit
         player1.f = ORANGE
         current_time = pygame.time.get_ticks()
+        elapsed_time = current_time - HITMOMENT
+        
+        if (elapsed_time // 50) % 2 == 0:
+            player1.texture = scaled_image_Player1_Hit
+        else:
+            player1.texture = scaled_image_Player1
+
         if current_time - HITMOMENT >= 1000:
+            player1.texture = scaled_image_Player1
+
             INVINCIBLE = False
             player1.f = RED
+            player1.texture = scaled_image_Player1
+
 
     # Goal Kollision
     reset_triggered = False
