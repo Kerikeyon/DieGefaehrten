@@ -130,6 +130,7 @@ class Gegner:
 
 
     def draw(self, screen, camera_offset_y):
+
         draw_pos = (self.x, self.y - camera_offset_y)
         if self.texture:
             screen.blit(self.texture, draw_pos)
@@ -147,7 +148,7 @@ class Coin:
         self.rect = pygame.Rect(self.x, self.y, self.w, self.h)
 
     def draw(self, screen, camera_offset_y):
-        if self.texture:
+        if self.texture :
             screen.blit(self.texture, (self.x, self.y - camera_offset_y))
         else:
             pygame.draw.rect(screen, self.f, (self.x, self.y - camera_offset_y, self.w, self.h))
@@ -202,6 +203,10 @@ list_platform = [
     Platform(SCHWARZ, 1000-53, -30, 40, 700, texture=texture_right_wall),
     Platform(SCHWARZ, 1000-53, -630, 40, 600, texture=texture_right_wall),
 ]
+
+list_gegner = [Gegner(BLAU, 100, 100, 75, 75, 4)]
+
+
 #Origin Liste Coins
 origin_ruby_coins = [
     (ROT, 525, -30, 30, 30, scaled_texture_ruby_coin),
@@ -226,6 +231,9 @@ list_gold_coins = create_gold_coins()
 # Ziel erstellen
 goal1 = Goal(GRÜN, 700, -400, 50, 50)
 
+#Gegner erstellen
+#Gegner(BLAU, 100, 100, 75, 75, 4)
+
 # Spieler erstellen
 player1 = Player(ROT, Cx - 25, 450, 50, 50, texture=scaled_image_Player1)
 
@@ -242,13 +250,13 @@ while spielaktive:
     player1.KeyPress()
     camera_offset_y = player1.y - screen_height / 2
     screen.fill(WEISS)
-    pygame.draw.rect(screen, player1.f, [player1.x, player1.y, 50, 50])
 
 
 
-    for gegner in list_enemies:
+    for gegner in list_gegner:
         gegner.update()
-        pygame.draw.rect(screen, gegner.f, gegner.rect)
+        gegner.draw(screen, camera_offset_y)
+        #pygame.draw.rect(screen, gegner.f, gegner1.rect)
 
 
     # Plattformen zeichnen
@@ -295,7 +303,6 @@ while spielaktive:
                 player1.v[0] = v0x
 
     player1.rect.topleft = (player1.x, player1.y)
-
     player1.resetJump()
 
     # Coin-Kollision
@@ -308,9 +315,10 @@ while spielaktive:
             del list_gold_coins[i]
             score += 2
 
+    
     # Enemy-Kollision
-    for enemy in list_enemies:
-        if player1.rect.colliderect(enemy.rect):
+    for gegner in list_gegner:
+        if player1.rect.colliderect(gegner.rect):
             if not INVINCIBLE:
                 INVINCIBLE = True
                 LEBEN -= 1
