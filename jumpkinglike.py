@@ -95,13 +95,27 @@ class Platform:
 
 
 class Gegner:
-    def __init__(self, farbe, x, y, width, height):
+    def __init__(self, farbe, x, y, width, height, speed = 3, bewegungsbereich = 200):
         self.f = farbe
         self.x = x
         self.y = y
         self.w = width
         self.h = height
-        self.rect = pygame.Rect(self.x, self.y, self.w, self.h) 
+        self.speed = speed  
+        self.start_x = x  
+        self.bewegungsbereich = bewegungsbereich  
+        self.richtung = 1  
+        self.rect = pygame.Rect(self.x, self.y, self.w, self.h)        
+
+
+    def update(self):
+
+        self.x += self.speed * self.richtung
+        self.rect.x = self.x
+
+        if self.x > self.start_x + self.bewegungsbereich or self.x < self.start_x - self.bewegungsbereich:
+            self.richtung *= -1
+
 
 
 class Coin:
@@ -123,7 +137,7 @@ Coin(GELB, 400, 180, 15, 15)
 
 farbe = [WEISS, SCHWARZ, ROT, ORANGE, GELB, GRÜN, BLAU]
 list_platform = [Platform(SCHWARZ, 320, 455, 640, 50), Platform(SCHWARZ, 500, 100, 100, 80), Platform(SCHWARZ, 400, 200, 100, 80)]
-list_gegner = [Gegner(BLAU, Cx - 100, 100, 200, 200)]
+list_gegner = [Gegner(BLAU, Cx - 50, 385, 75, 75, 4)]
 player1 = Player(farbe[2], Cx - 320 , 404 , 50, 50)
 font = pygame.font.Font('freesansbold.ttf', 32)
 score = 0
@@ -136,10 +150,16 @@ while spielaktive:
         if event.type == pygame.QUIT:
             spielaktive = False
 
+
+
+
     player1.KeyPress()
     screen.fill(WEISS)
     pygame.draw.rect(screen, player1.f, [player1.x, player1.y, 50, 50])
-    pygame.draw.rect(screen, BLAU, [Cx-100, 100, 200, 200])
+
+    for gegner in list_gegner:
+        gegner.update()
+        pygame.draw.rect(screen, gegner.f, gegner.rect)
 
     for i in range(len(list_Coins) - 1, -1, -1):
         if player1.rect.colliderect(list_Coins[i].rect):
@@ -194,7 +214,7 @@ while spielaktive:
     if INVINCIBLE == True:
         player1.f = farbe[3]
         currenttime = pygame.time.get_ticks()
-        if (currenttime - HITMOMENT )>= 1000:
+        if (currenttime - HITMOMENT )>= 500:
             INVINCIBLE = False
             player1.f = farbe[2]
 
