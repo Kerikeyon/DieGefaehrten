@@ -104,15 +104,30 @@ class Platform:
         else:
             pygame.draw.rect(screen, self.f, [self.x, self.y - camera_offset_y, self.w, self.h])
 
-class Enemy:
-    def __init__(self, farbe, x, y, width, height, texture=None):
+class Gegner:
+    def __init__(self, farbe, x, y, width, height, speed = 3, bewegungsbereich = 200, texture = None):
         self.f = farbe
         self.x = x
         self.y = y
         self.w = width
         self.h = height
-        self.texture = texture
-        self.rect = pygame.Rect(self.x, self.y, self.w, self.h)
+        self.speed = speed  
+        self.start_x = x  
+        self.bewegungsbereich = bewegungsbereich  
+        self.richtung = 1          
+        self.texture = texture        
+        self.rect = pygame.Rect(self.x, self.y, self.w, self.h) 
+
+
+
+    def update(self):
+
+        self.x += self.speed * self.richtung
+        self.rect.x = self.x
+
+        if self.x > self.start_x + self.bewegungsbereich or self.x < self.start_x - self.bewegungsbereich:
+            self.richtung *= -1
+
 
     def draw(self, screen, camera_offset_y):
         draw_pos = (self.x, self.y - camera_offset_y)
@@ -152,24 +167,24 @@ class Goal:
         pygame.draw.rect(screen, self.f, draw_rect)
 
 # Texturen laden und skalieren
-texture_Boden = pygame.image.load(r"C:\Users\Paul\Downloads\Texturen_JumpKingLike - Kopie\Texturen_JumpKingLike - Kopie\Platforms_Backgrounds\Bodentextur2.webp")
+texture_Boden = pygame.image.load(r"Texturen\Bodentextur2.webp")
 scaled_texture_floor1 = pygame.transform.scale(texture_Boden, (520, 500))
 
-Plattform_texture = pygame.image.load(r"C:\Users\Paul\Downloads\Texturen_JumpKingLike - Kopie\Texturen_JumpKingLike - Kopie\Platforms_Backgrounds\Flying_Plattform.png")
+Plattform_texture = pygame.image.load(r"Texturen\Flying_Plattform.png")
 scaled_image_platform = pygame.transform.scale(Plattform_texture, (200, 70))
 
-texture_Player1 = pygame.image.load(r"C:\Users\Paul\Downloads\Texturen_JumpKingLike - Kopie\Texturen_JumpKingLike - Kopie\Player_Enemys_Coins\WorrierMain.png")
+texture_Player1 = pygame.image.load(r"Texturen\WorrierMain.png")
 scaled_image_Player1 = pygame.transform.scale(texture_Player1, (52, 52))
 
-texture_left_wall = pygame.image.load(r"C:\Users\Paul\Downloads\Texturen_JumpKingLike - Kopie\Texturen_JumpKingLike - Kopie\Platforms_Backgrounds\Linke Wand.png")
-texture_right_wall = pygame.image.load(r"C:\Users\Paul\Downloads\Texturen_JumpKingLike - Kopie\Texturen_JumpKingLike - Kopie\Platforms_Backgrounds\Rechte Wand.png")
+texture_left_wall = pygame.image.load(r"Texturen\Linke Wand.png")
+texture_right_wall = pygame.image.load(r"Texturen\Rechte Wand.png")
 
-texture_left_beam = pygame.image.load(r"C:\Users\Paul\Downloads\Texturen_JumpKingLike - Kopie\Texturen_JumpKingLike - Kopie\Platforms_Backgrounds\BalkenLinkeWand.png")
-texture_right_beam = pygame.image.load(r"C:\Users\Paul\Downloads\Texturen_JumpKingLike - Kopie\Texturen_JumpKingLike - Kopie\Platforms_Backgrounds\BalkenRechteWand.png")
+texture_left_beam = pygame.image.load(r"Texturen\BalkenLinkeWand.png")
+texture_right_beam = pygame.image.load(r"Texturen\BalkenRechteWand.png")
 
-texture_ruby_coin = pygame.image.load (r"C:\Users\Paul\Downloads\Texturen_JumpKingLike - Kopie\Texturen_JumpKingLike - Kopie\Player_Enemys_Coins\RubyCoin.png")
+texture_ruby_coin = pygame.image.load (r"Texturen\RubyCoin.png")
 scaled_texture_ruby_coin = pygame.transform.scale(texture_ruby_coin, (35, 30))
-texture_gold_coin = pygame.image.load (r"C:\Users\Paul\Downloads\Texturen_JumpKingLike - Kopie\Texturen_JumpKingLike - Kopie\Player_Enemys_Coins\GoldCoin.jpeg")
+texture_gold_coin = pygame.image.load (r"Texturen\GoldCoin.jpeg")
 scaled_texture_gold_coin = pygame.transform.scale(texture_gold_coin, (40, 40))
 
 
@@ -206,10 +221,7 @@ def create_gold_coins():
 list_ruby_coins = create_ruby_coins()
 list_gold_coins = create_gold_coins()
 
-#Liste Gegner
-list_enemies = [
-    Enemy(BLAU,  100, 100, 70, 70)
-]
+
 
 # Ziel erstellen
 goal1 = Goal(GRÜN, 700, -400, 50, 50)
@@ -224,9 +236,20 @@ while spielaktive:
         if event.type == pygame.QUIT:
             spielaktive = False
 
+
+
+
     player1.KeyPress()
     camera_offset_y = player1.y - screen_height / 2
     screen.fill(WEISS)
+    pygame.draw.rect(screen, player1.f, [player1.x, player1.y, 50, 50])
+
+
+
+    for gegner in list_enemies:
+        gegner.update()
+        pygame.draw.rect(screen, gegner.f, gegner.rect)
+
 
     # Plattformen zeichnen
     for platform in list_platform:
@@ -238,9 +261,6 @@ while spielaktive:
     for coin in list_gold_coins:
         coin.draw(screen, camera_offset_y)
 
-    # Enemies zeichnen
-    for enemy in list_enemies:
-        enemy.draw(screen, camera_offset_y)
 
     # Goal zeichnen
     goal1.draw(screen, camera_offset_y)
