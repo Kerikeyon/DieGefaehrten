@@ -54,7 +54,7 @@ scaled_texture_ruby_coin = pygame.transform.scale(texture_ruby_coin, (35, 30))
 texture_gold_coin = pygame.image.load (r"Texturen\GoldCoin.jpeg")
 scaled_texture_gold_coin = pygame.transform.scale(texture_gold_coin, (40, 40))
 
-
+#hallo
 #Liste Plattformen
 list_platform = [
     Platform(BLACK, -20, 570, 520, 500, texture=scaled_texture_floor1),
