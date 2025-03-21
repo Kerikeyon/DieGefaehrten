@@ -25,175 +25,13 @@ HITMOMENT = 0
 # Scoreanzeige
 font = pygame.font.Font('freesansbold.ttf', 32)
 
-<<<<<<< HEAD
+# Klassen
+from Gegner import Gegner
 from Player import Player
-from Platform import Platform
-from Enemy import Enemy
 from Coin import Coin
 from Goal import Goal
+from Platform import Platform
 from Heart import Heart
-
-# Texturen laden und skalieren
-texture_Boden = pygame.image.load(r"C:\Users\joaop\OneDrive\Desktop\uni\EIP\praktikum\Texturen_JumpKingLike - Kopie\Platforms_Backgrounds\Bodentextur2.webp")
-scaled_texture_floor1 = pygame.transform.scale(texture_Boden, (520, 500))
-
-Plattform_texture = pygame.image.load(r"C:\Users\joaop\OneDrive\Desktop\uni\EIP\praktikum\Texturen_JumpKingLike - Kopie\Platforms_Backgrounds\Flying_Plattform.png")
-scaled_image_platform = pygame.transform.scale(Plattform_texture, (200, 70))
-
-texture_Player1 = pygame.image.load(r"C:\Users\joaop\OneDrive\Desktop\uni\EIP\praktikum\Texturen_JumpKingLike - Kopie\Player_Enemys_Coins\WorrierMain.png")
-scaled_image_Player1 = pygame.transform.scale(texture_Player1, (52, 52))
-
-texture_left_wall = pygame.image.load(r"C:\Users\joaop\OneDrive\Desktop\uni\EIP\praktikum\Texturen_JumpKingLike - Kopie\Platforms_Backgrounds\Linke Wand.png")
-texture_right_wall = pygame.image.load(r"C:\Users\joaop\OneDrive\Desktop\uni\EIP\praktikum\Texturen_JumpKingLike - Kopie\Platforms_Backgrounds\Rechte Wand.png")
-
-texture_left_beam = pygame.image.load(r"C:\Users\joaop\OneDrive\Desktop\uni\EIP\praktikum\Texturen_JumpKingLike - Kopie\Platforms_Backgrounds\BalkenLinkeWand.png")
-texture_right_beam = pygame.image.load(r"C:\Users\joaop\OneDrive\Desktop\uni\EIP\praktikum\Texturen_JumpKingLike - Kopie\Platforms_Backgrounds\BalkenRechteWand.png")
-
-texture_ruby_coin = pygame.image.load (r"C:\Users\joaop\OneDrive\Desktop\uni\EIP\praktikum\Texturen_JumpKingLike - Kopie\Player_Enemys_Coins\RubyCoin.png")
-scaled_texture_ruby_coin = pygame.transform.scale(texture_ruby_coin, (35, 30))
-texture_gold_coin = pygame.image.load (r"C:\Users\joaop\OneDrive\Desktop\uni\EIP\praktikum\Texturen_JumpKingLike - Kopie\Player_Enemys_Coins\GoldCoin.jpeg")
-=======
-# Klassen
-class Player:
-    def __init__(self, farbe, x, y, width, height, texture=None):
-        self.f = farbe
-        self.x = x
-        self.y = y
-        self.w = width
-        self.h = height
-        self.texture = texture
-        self.v = pygame.Vector2(v0x, v0y)
-        self.rect = pygame.Rect(self.x, self.y, self.w, self.h)
-        self.isjump = False
-        self.jumpCount = 10
-        self.gravity = 1
-        self.nextjump = 0
-        self.jump_cooldown = 1000
-        self.isOnPlatform = False
-
-    def draw(self, screen, camera_offset_y):
-        if self.texture:
-            screen.blit(self.texture, (self.x, self.y - camera_offset_y))
-        else:
-            pygame.draw.rect(screen, self.f, (self.x, self.y - camera_offset_y, self.w, self.h))
-
-    def KeyPress(self):
-        keys = pygame.key.get_pressed()
-        current_time = pygame.time.get_ticks()
-        if keys[pygame.K_SPACE] and not self.isjump and (current_time - self.nextjump) >= self.jump_cooldown and self.isOnPlatform:
-            self.isjump = True
-            self.jumpCount = 10
-            self.nextjump = current_time
-        if keys[pygame.K_d]:
-            self.x += self.v[0]
-        if keys[pygame.K_a]:
-            self.x -= self.v[0]
-        self.rect.x = self.x
-        self.rect.y = self.y
-
-    def applyGravity(self):
-        if not self.isjump:
-            self.v[1] += self.gravity
-        else:
-            self.v[1] = -9
-        self.y += self.v[1]
-        self.rect.y = self.y
-
-    def jump(self):
-        if self.isjump:
-            if self.jumpCount >= -10:
-                neg = 1 if self.jumpCount >= 0 else -1
-                self.y -= self.jumpCount * 2 * 0.1 * neg
-                self.jumpCount -= 1
-            else:
-                self.isjump = False
-
-    def resetJump(self):
-        if self.rect.bottom >= screen_height:
-            self.rect.bottom = screen_height
-            self.isjump = False
-            self.jumpCount = 10
-            self.v[1] = 0
-
-class Platform:
-    def __init__(self, farbe, x, y, width, height, texture=None):
-        self.f = farbe
-        self.x = x
-        self.y = y
-        self.w = width
-        self.h = height
-        self.texture = texture
-        self.rect = pygame.Rect(self.x, self.y, self.w, self.h)
-
-    def draw(self, screen, camera_offset_y):
-        draw_pos = (self.x, self.y - camera_offset_y)
-        if self.texture:
-            screen.blit(self.texture, draw_pos)
-        else:
-            pygame.draw.rect(screen, self.f, [self.x, self.y - camera_offset_y, self.w, self.h])
-
-class Gegner:
-    def __init__(self, farbe, x, y, width, height, speed = 3, bewegungsbereich = 200, texture = None):
-        self.f = farbe
-        self.x = x
-        self.y = y
-        self.w = width
-        self.h = height
-        self.speed = speed  
-        self.start_x = x  
-        self.bewegungsbereich = bewegungsbereich  
-        self.richtung = 1          
-        self.texture = texture        
-        self.rect = pygame.Rect(self.x, self.y, self.w, self.h) 
-
-
-
-    def update(self):
-
-        self.x += self.speed * self.richtung
-        self.rect.x = self.x
-
-        if self.x > self.start_x + self.bewegungsbereich or self.x < self.start_x - self.bewegungsbereich:
-            self.richtung *= -1
-
-
-    def draw(self, screen, camera_offset_y):
-
-        draw_pos = (self.x, self.y - camera_offset_y)
-        if self.texture:
-            screen.blit(self.texture, draw_pos)
-        else:
-            pygame.draw.rect(screen, self.f, [self.x, self.y - camera_offset_y, self.w, self.h])
-
-class Coin:
-    def __init__(self, farbe, x, y, width, height, texture=None):
-        self.f = farbe
-        self.x = x
-        self.y = y
-        self.w = width
-        self.h = height
-        self.texture = texture
-        self.rect = pygame.Rect(self.x, self.y, self.w, self.h)
-
-    def draw(self, screen, camera_offset_y):
-        if self.texture :
-            screen.blit(self.texture, (self.x, self.y - camera_offset_y))
-        else:
-            pygame.draw.rect(screen, self.f, (self.x, self.y - camera_offset_y, self.w, self.h))
-
-class Goal:
-    def __init__(self, farbe, x, y, width, height, texture=None):
-        self.f = farbe
-        self.x = x
-        self.y = y
-        self.w = width
-        self.h = height
-        self.texture = texture
-        self.rect = pygame.Rect(self.x, self.y, self.w, self.h)
-
-    def draw(self, screen, camera_offset_y):
-        draw_rect = pygame.Rect(self.x, self.y - camera_offset_y, self.w, self.h)
-        pygame.draw.rect(screen, self.f, draw_rect)
 
 # Texturen laden und skalieren
 texture_Boden = pygame.image.load(r"Texturen\Bodentextur2.webp")
@@ -214,7 +52,6 @@ texture_right_beam = pygame.image.load(r"Texturen\BalkenRechteWand.png")
 texture_ruby_coin = pygame.image.load (r"Texturen\RubyCoin.png")
 scaled_texture_ruby_coin = pygame.transform.scale(texture_ruby_coin, (35, 30))
 texture_gold_coin = pygame.image.load (r"Texturen\GoldCoin.jpeg")
->>>>>>> 712c3b5f8f7f7aea6ea4efa802b73b73dc66293b
 scaled_texture_gold_coin = pygame.transform.scale(texture_gold_coin, (40, 40))
 
 
