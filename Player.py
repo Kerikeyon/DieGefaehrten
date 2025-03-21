@@ -4,8 +4,8 @@ v0x, v0y = 5, 5
 screen = pygame.display.set_mode((1000, 600))
 screen_width, screen_height = screen.get_size()
 class Player:
-    def __init__(self, farbe, x, y, width, height, texture=None):
-        self.f = farbe
+    def __init__(self, color, x, y, width, height, texture=None):
+        self.f = color
         self.x = x
         self.y = y
         self.w = width

@@ -1,8 +1,8 @@
 #heart class
 import pygame
 class Heart:
-    def __init__(self, farbe, x, y, width, height, texture=None):
-        self.f = farbe
+    def __init__(self, color, x, y, width, height, texture=None):
+        self.f = color
         self.x = x
         self.y = y
         self.w = width
