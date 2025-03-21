@@ -1,16 +1,16 @@
 #enemy class
 import pygame
-class Gegner:
-    def __init__(self, farbe, x, y, width, height, speed = 3, bewegungsbereich = 200, texture = None):
-        self.f = farbe
+class Enemy:
+    def __init__(self, color, x, y, width, height, speed = 3, movrange = 200, texture = None):
+        self.f = color
         self.x = x
         self.y = y
         self.w = width
         self.h = height
         self.speed = speed  
         self.start_x = x  
-        self.bewegungsbereich = bewegungsbereich  
-        self.richtung = 1          
+        self.movrange = movrange  
+        self.direction = 1          
         self.texture = texture        
         self.rect = pygame.Rect(self.x, self.y, self.w, self.h) 
 
@@ -18,11 +18,11 @@ class Gegner:
 
     def update(self):
 
-        self.x += self.speed * self.richtung
+        self.x += self.speed * self.direction
         self.rect.x = self.x
 
-        if self.x > self.start_x + self.bewegungsbereich or self.x < self.start_x - self.bewegungsbereich:
-            self.richtung *= -1
+        if self.x > self.start_x + self.movrange or self.x < self.start_x - self.movrange:
+            self.direction *= -1
 
 
     def draw(self, screen, camera_offset_y):

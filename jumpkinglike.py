@@ -8,17 +8,17 @@ Cx, Cy = screen_width / 2, screen_height / 2
 v0x, v0y = 5, 5
 
 # Farben
-WEISS = (255, 255, 255)
-SCHWARZ = (0, 0, 0)
-ROT = (255, 0, 0)
+WHITE = (255, 255, 255)
+BLACK = (0, 0, 0)
+RED = (255, 0, 0)
 ORANGE = (255, 128, 0)
-GELB = (255, 255, 0)
-GRÜN = (0, 255, 0)
-BLAU = (0, 0, 255)
+YELLOW = (255, 255, 0)
+GREEN = (0, 255, 0)
+BLUE = (0, 0, 255)
 
 # Globale Variablen für Invincibility und Leben
 INVINCIBLE = False
-LEBEN = 3
+HITPOINTS = 3
 score = 0
 HITMOMENT = 0
 
@@ -26,7 +26,7 @@ HITMOMENT = 0
 font = pygame.font.Font('freesansbold.ttf', 32)
 
 # Klassen
-from Gegner import Gegner
+from Enemy import Enemy
 from Player import Player
 from Coin import Coin
 from Goal import Goal
@@ -34,8 +34,8 @@ from Platform import Platform
 from Heart import Heart
 
 # Texturen laden und skalieren
-texture_Boden = pygame.image.load(r"Texturen\Bodentextur2.webp")
-scaled_texture_floor1 = pygame.transform.scale(texture_Boden, (520, 500))
+texture_floor = pygame.image.load(r"Texturen\Bodentextur2.webp")
+scaled_texture_floor1 = pygame.transform.scale(texture_floor, (520, 500))
 
 Plattform_texture = pygame.image.load(r"Texturen\Flying_Plattform.png")
 scaled_image_platform = pygame.transform.scale(Plattform_texture, (200, 70))
@@ -57,29 +57,29 @@ scaled_texture_gold_coin = pygame.transform.scale(texture_gold_coin, (40, 40))
 
 #Liste Plattformen
 list_platform = [
-    Platform(SCHWARZ, -20, 570, 520, 500, texture=scaled_texture_floor1),
-    Platform(SCHWARZ, 500, 570, 520, 500, texture=scaled_texture_floor1),
-    Platform(WEISS, 640, 400, 200, 30, texture=scaled_image_platform),
-    Platform(WEISS, 440, 10, 200, 30, texture=scaled_image_platform),
-    Platform(WEISS, 70, -200, 200, 30, texture=scaled_image_platform),
-    Platform(WEISS, 13, 203, 451, 47, texture=texture_left_beam),
-    Platform(WEISS, 538, -309, 451, 47, texture=texture_right_beam),
-    Platform(SCHWARZ, 0, -30, 40, 700, texture=texture_left_wall),
-    Platform(SCHWARZ, 0, -630, 40, 700, texture=texture_left_wall),
-    Platform(SCHWARZ, 1000-53, -30, 40, 700, texture=texture_right_wall),
-    Platform(SCHWARZ, 1000-53, -630, 40, 700, texture=texture_right_wall),
+    Platform(BLACK, -20, 570, 520, 500, texture=scaled_texture_floor1),
+    Platform(BLACK, 500, 570, 520, 500, texture=scaled_texture_floor1),
+    Platform(WHITE, 640, 400, 200, 30, texture=scaled_image_platform),
+    Platform(WHITE, 440, 10, 200, 30, texture=scaled_image_platform),
+    Platform(WHITE, 70, -200, 200, 30, texture=scaled_image_platform),
+    Platform(WHITE, 13, 203, 451, 47, texture=texture_left_beam),
+    Platform(WHITE, 538, -309, 451, 47, texture=texture_right_beam),
+    Platform(BLACK, 0, -30, 40, 700, texture=texture_left_wall),
+    Platform(BLACK, 0, -630, 40, 700, texture=texture_left_wall),
+    Platform(BLACK, 1000-53, -30, 40, 700, texture=texture_right_wall),
+    Platform(BLACK, 1000-53, -630, 40, 700, texture=texture_right_wall),
 ]
 
-list_gegner = [Gegner(BLAU, 100, 100, 75, 75, 4)]
+list_enemy = [Enemy(BLUE, 100, 100, 75, 75, 4)]
 
 
 #Origin Liste Coins
 origin_ruby_coins = [
-    (ROT, 525, -30, 30, 30, scaled_texture_ruby_coin),
+    (RED, 525, -30, 30, 30, scaled_texture_ruby_coin),
 ]
 
 origin_gold_coins = [
-    (GELB, 300, 160, 30, 30, scaled_texture_gold_coin)
+    (YELLOW, 300, 160, 30, 30, scaled_texture_gold_coin)
 ]
 
 def create_ruby_coins():
@@ -95,37 +95,35 @@ list_gold_coins = create_gold_coins()
 
 
 #Liste leben
-list_hearts = [Heart(ROT, 20, 20, 40, 40, None), Heart(ROT, 80, 20, 40, 40, None), Heart(ROT, 140, 20, 40, 40, None)]
+list_hearts = [Heart(RED, 20, 20, 40, 40, None), Heart(RED, 80, 20, 40, 40, None), Heart(RED, 140, 20, 40, 40, None)]
 
 # Ziel erstellen
-goal1 = Goal(GRÜN, 700, -400, 50, 50)
+goal1 = Goal(GREEN, 700, -400, 50, 50)
 
-#Gegner erstellen
-#Gegner(BLAU, 100, 100, 75, 75, 4)
 
 # Spieler erstellen
-player1 = Player(ROT, Cx - 25, 450, 50, 50, texture=scaled_image_Player1)
+player1 = Player(RED, Cx - 25, 450, 50, 50, texture=scaled_image_Player1)
 
 # Hauptspielschleife
-spielaktive = True
-while spielaktive:
+gameactive = True
+while gameactive:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            spielaktive = False
+            gameactive = False
 
 
 
 
     player1.KeyPress()
     camera_offset_y = player1.y - screen_height / 2
-    screen.fill(WEISS)
+    screen.fill(WHITE)
 
 
-
-    for gegner in list_gegner:
-        gegner.update()
-        gegner.draw(screen, camera_offset_y)
-        #pygame.draw.rect(screen, gegner.f, gegner1.rect)
+    #Gegner zeichen
+    for enemy in list_enemy:
+        enemy.update()
+        enemy.draw(screen, camera_offset_y)
+        
 
 
     # Plattformen zeichnen
@@ -186,11 +184,11 @@ while spielaktive:
 
     
     # Enemy-Kollision
-    for gegner in list_gegner:
-        if player1.rect.colliderect(gegner.rect):
+    for enemy in list_enemy:
+        if player1.rect.colliderect(enemy.rect):
             if not INVINCIBLE:
                 INVINCIBLE = True
-                LEBEN -= 1
+                HITPOINTS -= 1
                 HITMOMENT = pygame.time.get_ticks()
 
     if INVINCIBLE:
@@ -198,35 +196,35 @@ while spielaktive:
         current_time = pygame.time.get_ticks()
         if current_time - HITMOMENT >= 1000:
             INVINCIBLE = False
-            player1.f = ROT
+            player1.f = RED
 
     # Goal Kollision
     reset_triggered = False
     if player1.rect.colliderect(goal1.rect):
         if not reset_triggered:
             reset_triggered = True  # Reset nur einmal auslösen
-            player1 = Player(ROT, Cx - 25, 450, 50, 50, texture=scaled_image_Player1)
+            player1 = Player(RED, Cx - 25, 450, 50, 50, texture=scaled_image_Player1)
             list_ruby_coins[:] = create_ruby_coins()
             list_gold_coins[:] = create_gold_coins()
             score = 0
             INVINCIBLE = False
-            LEBEN = 3
+            HITPOINTS = 3
     else:
         reset_triggered = False
 
     # Spieler-Reset
-    if LEBEN <= 0:
-        LEBEN = 3
+    if HITPOINTS <= 0:
+        HITPOINTS = 3
         score = 0
         list_ruby_coins[:] = create_ruby_coins()
         list_gold_coins[:] = create_gold_coins()
-        player1 = Player(ROT, Cx - 25, 450, 50, 50, texture=scaled_image_Player1)
+        player1 = Player(RED, Cx - 25, 450, 50, 50, texture=scaled_image_Player1)
 
     # Scoreanzeige zeichnen
-    score_text = font.render('Score = ' + str(score), True, GRÜN)
+    score_text = font.render('Score = ' + str(score), True, GREEN)
     screen.blit(score_text, (750, 50))
 
-    for i in range(LEBEN):
+    for i in range(HITPOINTS):
         list_hearts[i].draw(screen, 0)
 
     pygame.display.flip()
