@@ -4,7 +4,7 @@ pygame.init()
 clock = pygame.time.Clock()
 screen = pygame.display.set_mode((1000, 600))
 screen_width, screen_height = screen.get_size()
-Cx, Cy = screen_width / 2, screen_height / 2
+Cx, Cy = screen_width / 2, screen_height / 2#hi
 v0x, v0y = 5, 5
 
 # Farben
@@ -57,7 +57,7 @@ scaled_texture_ruby_coin = pygame.transform.scale(texture_ruby_coin, (35, 30))
 texture_gold_coin = pygame.image.load (r"Texturen\GoldCoin.jpeg")
 scaled_texture_gold_coin = pygame.transform.scale(texture_gold_coin, (40, 40))
 
-
+#hallo
 #Liste Plattformen
 list_platform = [
     Platform(BLACK, -20, 570, 520, 500, texture=scaled_texture_floor1),
