@@ -4,7 +4,7 @@ pygame.init()
 clock = pygame.time.Clock()
 screen = pygame.display.set_mode((1000, 600))
 screen_width, screen_height = screen.get_size()
-Cx, Cy = screen_width / 2, screen_height / 2
+Cx, Cy = screen_width / 2, screen_height / 2#hi
 v0x, v0y = 5, 5
 
 # Farben
