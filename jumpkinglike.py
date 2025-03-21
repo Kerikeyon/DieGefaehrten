@@ -1,78 +1,80 @@
-import pygame as pygame
-import math
-
-#git add .
-#git commit -m "test"
-#git push
+import pygame
 
 pygame.init()
 clock = pygame.time.Clock()
-screen = pygame.display.set_mode((1500, 750))
-screen_width , screen_height = screen.get_size()
-Cx , Cy = screen_width/2 , screen_height/2
+screen = pygame.display.set_mode((1000, 600))
+screen_width, screen_height = screen.get_size()
+Cx, Cy = screen_width / 2, screen_height / 2
 v0x, v0y = 5, 5
+
+# Farben
 WEISS = (255, 255, 255)
 SCHWARZ = (0, 0, 0)
 ROT = (255, 0, 0)
-ORANGE = (255, 140, 0)
+ORANGE = (255, 128, 0)
 GELB = (255, 255, 0)
 GRÜN = (0, 255, 0)
 BLAU = (0, 0, 255)
-Hä = (56, 84, 120)
 
+# Globale Variablen für Invincibility und Leben
 INVINCIBLE = False
 LEBEN = 3
+score = 0
+HITMOMENT = 0
 
+# Scoreanzeige
+font = pygame.font.Font('freesansbold.ttf', 32)
+
+# Klassen
 class Player:
-    def __init__(self, farbe, x, y, width, height):
+    def __init__(self, farbe, x, y, width, height, texture=None):
         self.f = farbe
         self.x = x
         self.y = y
         self.w = width
         self.h = height
-        self.v = pygame.Vector2(0, 0)
+        self.texture = texture
+        self.v = pygame.Vector2(v0x, v0y)
         self.rect = pygame.Rect(self.x, self.y, self.w, self.h)
         self.isjump = False
         self.jumpCount = 10
-        self.gravity = 0.5
+        self.gravity = 1
         self.nextjump = 0
         self.jump_cooldown = 1000
         self.isOnPlatform = False
 
+    def draw(self, screen, camera_offset_y):
+        if self.texture:
+            screen.blit(self.texture, (self.x, self.y - camera_offset_y))
+        else:
+            pygame.draw.rect(screen, self.f, (self.x, self.y - camera_offset_y, self.w, self.h))
 
     def KeyPress(self):
         keys = pygame.key.get_pressed()
         current_time = pygame.time.get_ticks()
-        if keys[pygame.K_SPACE] and not self.isjump and (current_time - self.nextjump) >= self.jump_cooldown and self.isOnPlatform == True:
+        if keys[pygame.K_SPACE] and not self.isjump and (current_time - self.nextjump) >= self.jump_cooldown and self.isOnPlatform:
             self.isjump = True
             self.jumpCount = 10
             self.nextjump = current_time
         if keys[pygame.K_d]:
-            self.v[0] = 5
             self.x += self.v[0]
         if keys[pygame.K_a]:
-            self.v[0] = 5
             self.x -= self.v[0]
-        #if keys[pygame.K_s]:
-            #self.y += self.v[1]
         self.rect.x = self.x
         self.rect.y = self.y
-
 
     def applyGravity(self):
         if not self.isjump:
             self.v[1] += self.gravity
         else:
-            self.v[1] = -7.5
+            self.v[1] = -9
         self.y += self.v[1]
         self.rect.y = self.y
 
     def jump(self):
         if self.isjump:
             if self.jumpCount >= -10:
-                neg = 1
-                if self.jumpCount < 0:
-                    neg = -1
+                neg = 1 if self.jumpCount >= 0 else -1
                 self.y -= self.jumpCount * 2 * 0.1 * neg
                 self.jumpCount -= 1
             else:
@@ -85,67 +87,137 @@ class Player:
             self.jumpCount = 10
             self.v[1] = 0
 
-
-
 class Platform:
-    def __init__(self, farbe, x, y, width, height):
+    def __init__(self, farbe, x, y, width, height, texture=None):
         self.f = farbe
         self.x = x
         self.y = y
         self.w = width
         self.h = height
+        self.texture = texture
         self.rect = pygame.Rect(self.x, self.y, self.w, self.h)
 
+    def draw(self, screen, camera_offset_y):
+        draw_pos = (self.x, self.y - camera_offset_y)
+        if self.texture:
+            screen.blit(self.texture, draw_pos)
+        else:
+            pygame.draw.rect(screen, self.f, [self.x, self.y - camera_offset_y, self.w, self.h])
 
-class Gegner:
-    def __init__(self, farbe, x, y, width, height):
+class Enemy:
+    def __init__(self, farbe, x, y, width, height, texture=None):
         self.f = farbe
         self.x = x
         self.y = y
         self.w = width
         self.h = height
-        self.rect = pygame.Rect(self.x, self.y, self.w, self.h) 
+        self.texture = texture
+        self.rect = pygame.Rect(self.x, self.y, self.w, self.h)
 
+    def draw(self, screen, camera_offset_y):
+        draw_pos = (self.x, self.y - camera_offset_y)
+        if self.texture:
+            screen.blit(self.texture, draw_pos)
+        else:
+            pygame.draw.rect(screen, self.f, [self.x, self.y - camera_offset_y, self.w, self.h])
 
 class Coin:
-    def __init__(self, farbe, x, y, width, height):
+    def __init__(self, farbe, x, y, width, height, texture=None):
         self.f = farbe
         self.x = x
         self.y = y
         self.w = width
         self.h = height
-        self.rect = pygame.Rect(self.x,self.y,self.h,self.w)
-    def draw(self):
-        self.rect.topleft = (self.x, self.y)
-        pygame.draw.rect(screen, GELB, self.rect)
+        self.texture = texture
+        self.rect = pygame.Rect(self.x, self.y, self.w, self.h)
+
+    def draw(self, screen, camera_offset_y):
+        if self.texture:
+            screen.blit(self.texture, (self.x, self.y - camera_offset_y))
+        else:
+            pygame.draw.rect(screen, self.f, (self.x, self.y - camera_offset_y, self.w, self.h))
 
 class Goal:
-    def __init__(self, farbe, x, y, width, height):
+    def __init__(self, farbe, x, y, width, height, texture=None):
         self.f = farbe
         self.x = x
         self.y = y
         self.w = width
         self.h = height
-        self.rect = pygame.Rect(self.x, self.y, self.h, self.w)
-    def draw(self):
-        self.rect.topleft = (self.x, self.y)
-        pygame.draw.rect(screen, Hä, self.rect)
+        self.texture = texture
+        self.rect = pygame.Rect(self.x, self.y, self.w, self.h)
 
-list_Coins = [
-Coin(GELB, 500, 75, 15, 15),
-Coin(GELB, 400, 180, 15, 15)
+    def draw(self, screen, camera_offset_y):
+        draw_rect = pygame.Rect(self.x, self.y - camera_offset_y, self.w, self.h)
+        pygame.draw.rect(screen, self.f, draw_rect)
+
+# Texturen laden und skalieren
+texture_Boden = pygame.image.load(r"C:\Users\Paul\Downloads\Texturen_JumpKingLike - Kopie\Texturen_JumpKingLike - Kopie\Platforms_Backgrounds\Bodentextur2.webp")
+scaled_texture_floor1 = pygame.transform.scale(texture_Boden, (520, 500))
+
+Plattform_texture = pygame.image.load(r"C:\Users\Paul\Downloads\Texturen_JumpKingLike - Kopie\Texturen_JumpKingLike - Kopie\Platforms_Backgrounds\Flying_Plattform.png")
+scaled_image_platform = pygame.transform.scale(Plattform_texture, (200, 70))
+
+texture_Player1 = pygame.image.load(r"C:\Users\Paul\Downloads\Texturen_JumpKingLike - Kopie\Texturen_JumpKingLike - Kopie\Player_Enemys_Coins\WorrierMain.png")
+scaled_image_Player1 = pygame.transform.scale(texture_Player1, (52, 52))
+
+texture_left_wall = pygame.image.load(r"C:\Users\Paul\Downloads\Texturen_JumpKingLike - Kopie\Texturen_JumpKingLike - Kopie\Platforms_Backgrounds\Linke Wand.png")
+texture_right_wall = pygame.image.load(r"C:\Users\Paul\Downloads\Texturen_JumpKingLike - Kopie\Texturen_JumpKingLike - Kopie\Platforms_Backgrounds\Rechte Wand.png")
+
+texture_left_beam = pygame.image.load(r"C:\Users\Paul\Downloads\Texturen_JumpKingLike - Kopie\Texturen_JumpKingLike - Kopie\Platforms_Backgrounds\BalkenLinkeWand.png")
+texture_right_beam = pygame.image.load(r"C:\Users\Paul\Downloads\Texturen_JumpKingLike - Kopie\Texturen_JumpKingLike - Kopie\Platforms_Backgrounds\BalkenRechteWand.png")
+
+texture_ruby_coin = pygame.image.load (r"C:\Users\Paul\Downloads\Texturen_JumpKingLike - Kopie\Texturen_JumpKingLike - Kopie\Player_Enemys_Coins\RubyCoin.png")
+scaled_texture_ruby_coin = pygame.transform.scale(texture_ruby_coin, (35, 30))
+texture_gold_coin = pygame.image.load (r"C:\Users\Paul\Downloads\Texturen_JumpKingLike - Kopie\Texturen_JumpKingLike - Kopie\Player_Enemys_Coins\GoldCoin.jpeg")
+scaled_texture_gold_coin = pygame.transform.scale(texture_gold_coin, (40, 40))
+
+
+#Liste Plattformen
+list_platform = [
+    Platform(SCHWARZ, -20, 570, 520, 500, texture=scaled_texture_floor1),
+    Platform(SCHWARZ, 500, 570, 520, 500, texture=scaled_texture_floor1),
+    Platform(WEISS, 640, 400, 200, 30, texture=scaled_image_platform),
+    Platform(WEISS, 440, 10, 200, 30, texture=scaled_image_platform),
+    Platform(WEISS, 70, -200, 200, 30, texture=scaled_image_platform),
+    Platform(WEISS, 13, 203, 451, 47, texture=texture_left_beam),
+    Platform(WEISS, 538, -309, 451, 47, texture=texture_right_beam),
+    Platform(SCHWARZ, 0, -30, 40, 700, texture=texture_left_wall),
+    Platform(SCHWARZ, 0, -630, 40, 600, texture=texture_left_wall),
+    Platform(SCHWARZ, 1000-53, -30, 40, 700, texture=texture_right_wall),
+    Platform(SCHWARZ, 1000-53, -630, 40, 600, texture=texture_right_wall),
+]
+#Origin Liste Coins
+origin_ruby_coins = [
+    (ROT, 525, -30, 30, 30, scaled_texture_ruby_coin),
 ]
 
-farbe = [WEISS, SCHWARZ, ROT, ORANGE, GELB, GRÜN, BLAU, Hä]
-list_platform = [Platform(SCHWARZ, 320, 455, 640, 50), Platform(SCHWARZ, 500, 100, 100, 80), Platform(SCHWARZ, 400, 200, 100, 80)]
-list_gegner = [Gegner(BLAU, Cx - 100, 100, 200, 200)]
-player1 = Player(farbe[2], Cx - 320 , 404 , 50, 50)
-font = pygame.font.Font('freesansbold.ttf', 32)
-score = 0
-text = font.render('Score = ' + str(score), True, GRÜN)
-textRect = text.get_rect()
-textRect.center = (750, 50)
-goal1 = Goal(farbe[7], 700, 50, 50, 50)
+origin_gold_coins = [
+    (GELB, 300, 160, 30, 30, scaled_texture_gold_coin)
+]
+
+def create_ruby_coins():
+    return [Coin(color, x, y, width, height, texture=texture)
+            for color, x, y, width, height, texture in origin_ruby_coins]
+def create_gold_coins():
+    return [Coin(color, x, y, width, height, texture=texture)
+            for color, x, y, width, height, texture in origin_gold_coins]
+
+list_ruby_coins = create_ruby_coins()
+list_gold_coins = create_gold_coins()
+
+#Liste Gegner
+list_enemies = [
+    Enemy(BLAU,  100, 100, 70, 70)
+]
+
+# Ziel erstellen
+goal1 = Goal(GRÜN, 700, -400, 50, 50)
+
+# Spieler erstellen
+player1 = Player(ROT, Cx - 25, 450, 50, 50, texture=scaled_image_Player1)
+
+# Hauptspielschleife
 spielaktive = True
 while spielaktive:
     for event in pygame.event.get():
@@ -153,83 +225,110 @@ while spielaktive:
             spielaktive = False
 
     player1.KeyPress()
+    camera_offset_y = player1.y - screen_height / 2
     screen.fill(WEISS)
-    pygame.draw.rect(screen, player1.f, [player1.x, player1.y, 50, 50])
-    pygame.draw.rect(screen, BLAU, [Cx-100, 200, 50, 50])
-    goal1.draw()
 
-    for i in range(len(list_Coins) - 1, -1, -1):
-        if player1.rect.colliderect(list_Coins[i].rect):
-            del list_Coins[i]
-            score += 1
-            text = font.render('Score = ' + str(score), True, GRÜN)
-            textRect = text.get_rect()
-            textRect.center = (750, 50)
+    # Plattformen zeichnen
+    for platform in list_platform:
+        platform.draw(screen, camera_offset_y)
+
+    # Coins zeichnen
+    for coin in list_ruby_coins:
+        coin.draw(screen, camera_offset_y)
+    for coin in list_gold_coins:
+        coin.draw(screen, camera_offset_y)
+
+    # Enemies zeichnen
+    for enemy in list_enemies:
+        enemy.draw(screen, camera_offset_y)
+
+    # Goal zeichnen
+    goal1.draw(screen, camera_offset_y)
+
+    # Spieler zeichnen
+    player1.draw(screen, camera_offset_y)
+
+    # Physik
     player1.applyGravity()
     player1.jump()
     player1.isOnPlatform = False
 
-    # Kollisionen
+    # Plattform-Kollisionen
     for platform in list_platform:
         if player1.rect.colliderect(platform.rect):
-
-                        # kollision von oben
-            if (player1.rect.y + player1.rect.h) > platform.rect.y  > player1.rect.y:
-                player1.y = platform.rect.y - player1.rect.h +0.5
-                player1.v[1] = 0
-                player1.v[0] = v0x
+            # Kollision von oben
+            if (player1.rect.y + player1.rect.h) > platform.rect.y > player1.rect.y:
+                player1.y = platform.rect.y - player1.rect.h + 0.5
+                player1.v[1] = v0y
                 player1.isOnPlatform = True
-            # kollision von unten
+            # Kollision von unten
             elif player1.rect.y < (platform.rect.y + platform.rect.h) < (player1.rect.y + player1.rect.h):
                 player1.y = platform.rect.y + platform.rect.h
-                player1.v[1] = 0
-                player1.v[0] = v0x
-            
-                        # kollision von links
+                player1.v[1] = v0y
+            # Kollision von links
             elif (player1.rect.x + player1.rect.w) > platform.rect.x > player1.rect.x:
                 player1.x = platform.rect.x - player1.rect.w
-                player1.v[0] = 0
-                player1.v[1] = 0
-
-            # kollision von rechts
+                player1.v[0] = v0x
+            # Kollision von rechts
             elif player1.rect.x < (platform.rect.x + platform.rect.w) < (player1.rect.x + player1.rect.w):
                 player1.x = platform.rect.x + platform.rect.w
-                player1.v[0] = 0
-                player1.v[1] = 0
+                player1.v[0] = v0x
 
-
-
+    player1.rect.topleft = (player1.x, player1.y)
 
     player1.resetJump()
-    for platform in list_platform:
-        pygame.draw.rect(screen, platform.f, platform.rect)
 
-    for Coin  in list_Coins:
-        pygame.draw.rect(screen, Coin.f, Coin.rect)
+    # Coin-Kollision
+    for i in range(len(list_ruby_coins)-1, -1, -1):
+        if player1.rect.colliderect(list_ruby_coins[i].rect):
+            del list_ruby_coins[i]
+            score += 1
+    for i in range(len(list_gold_coins)-1, -1, -1):
+        if player1.rect.colliderect(list_gold_coins[i].rect):
+            del list_gold_coins[i]
+            score += 2
 
-    # Kollision Gegner
-    if player1.rect.colliderect(list_gegner[0]) and INVINCIBLE == False:
-        INVINCIBLE = True
-        LEBEN -= 1
-        HITMOMENT = pygame.time.get_ticks()
-        
-    if INVINCIBLE == True:
-        player1.f = farbe[3]
-        currenttime = pygame.time.get_ticks()
-        if (currenttime - HITMOMENT )>= 500:
+    # Enemy-Kollision
+    for enemy in list_enemies:
+        if player1.rect.colliderect(enemy.rect):
+            if not INVINCIBLE:
+                INVINCIBLE = True
+                LEBEN -= 1
+                HITMOMENT = pygame.time.get_ticks()
+
+    if INVINCIBLE:
+        player1.f = ORANGE
+        current_time = pygame.time.get_ticks()
+        if current_time - HITMOMENT >= 1000:
             INVINCIBLE = False
-            player1.f = farbe[2]
+            player1.f = ROT
 
-    if LEBEN == 0:    
-        LEBEN += 3
-        player1 = Player(ROT, Cx - 25 , 405 , 50, 50)
-
+    # Goal Kollision
+    reset_triggered = False
     if player1.rect.colliderect(goal1.rect):
-        player1 = Player(ROT, Cx - 25, 405, 50, 50)
-        pygame.draw.rect(screen, Coin.f, Coin.rect)
+        if not reset_triggered:
+            reset_triggered = True  # Reset nur einmal auslösen
+            player1 = Player(ROT, Cx - 25, 450, 50, 50, texture=scaled_image_Player1)
+            list_ruby_coins[:] = create_ruby_coins()
+            list_gold_coins[:] = create_gold_coins()
+            INVINCIBLE = False
+            LEBEN = 3
+    else:
+        reset_triggered = False
 
-    screen.blit(text, textRect)
+    # Spieler-Reset
+    if LEBEN <= 0:
+        LEBEN = 3
+        score = 0
+        list_ruby_coins[:] = create_ruby_coins()
+        list_gold_coins[:] = create_gold_coins()
+        player1 = Player(ROT, Cx - 25, 450, 50, 50, texture=scaled_image_Player1)
 
-    clock.tick(60)
+    # Scoreanzeige zeichnen
+    score_text = font.render('Score = ' + str(score), True, GRÜN)
+    screen.blit(score_text, (750, 50))
 
     pygame.display.flip()
+    clock.tick(60)
+
+pygame.quit()
