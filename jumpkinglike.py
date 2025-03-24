@@ -99,7 +99,7 @@ def start_game():
         Slope(RED, 200, 200, 100, "left")
     ]
 
-    list_enemy = [Enemy(BLUE, 100, 100, 75, 75, 4)]
+    list_enemy = [Enemy(BLUE, 200, 100, 75, 75, 4, texture=scaled_image_enemy1)]
 
 
     #Origin Liste Coins
@@ -232,6 +232,8 @@ def start_game():
                 score = 0
                 INVINCIBLE = False
                 HITPOINTS = 3
+                victory = pygame.mixer.Sound(r"Sounds\victory1.mp3")
+                pygame.mixer.Sound.play(victory)
         else:
             reset_triggered = False
 
