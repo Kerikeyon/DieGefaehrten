@@ -1,5 +1,6 @@
 #player class
 import pygame
+pygame.mixer.init()
 v0x, v0y = 5, 5
 screen = pygame.display.set_mode((1000, 600))
 screen_width, screen_height = screen.get_size()
@@ -19,6 +20,7 @@ class Player:
         self.nextjump = 0
         self.jump_cooldown = 500
         self.isOnPlatform = 0
+        self.jump_sound = pygame.mixer.Sound(r"Sounds\jump1.mp3")
 
     def draw(self, screen, camera_offset_y):
         if self.texture:
@@ -26,7 +28,8 @@ class Player:
         else:
             pygame.draw.rect(screen, self.f, (self.x, self.y - camera_offset_y, self.w, self.h))
 
-    def KeyPress(self):
+
+    def KeyPress(self, ):
         keys = pygame.key.get_pressed()
         current_time = pygame.time.get_ticks()
         if keys[pygame.K_SPACE] and not self.isjump and (current_time - self.nextjump) >= self.jump_cooldown and self.isOnPlatform <2:
@@ -34,6 +37,7 @@ class Player:
             self.isjump = True
             self.jumpCount = 10
             self.nextjump = current_time
+            self.jump_sound.play()
         if keys[pygame.K_d]:
             self.x += self.v[0]
         if keys[pygame.K_a]:
@@ -49,6 +53,7 @@ class Player:
             self.v[1] = -9
         self.y += self.v[1]
         self.rect.y = self.y
+
 
     def jump(self):
         if self.isjump:
