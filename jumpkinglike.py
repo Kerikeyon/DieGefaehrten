@@ -95,7 +95,7 @@ list_slope = [
 ]
 
 #Liste Gegner
-list_enemy = [Enemy(BLUE, 100, 100, 75, 75, 4)]
+list_enemy = [Enemy(BLUE, 200, 100, 75, 75, 4)]
 
 
 #Origin Liste Coins
@@ -124,7 +124,7 @@ list_hearts = [Heart(RED, 20, 20, 40, 40, None), Heart(RED, 80, 20, 40, 40, None
 
 # Ziel erstellen
 goal1 = Goal(WHITE, 700, -380, 60, 80,texture=scaled_texture_trophy)
-
+#deathzone erstellen
 deathzone1 = Deathzone(WHITE, -1000, 900, 20000, 20000)
 
 
@@ -222,6 +222,8 @@ while gameactive:
                 INVINCIBLE = True
                 HITPOINTS -= 1
                 HITMOMENT = pygame.time.get_ticks()
+                damage = pygame.mixer.Sound(r"Sounds\damage.mp3")
+                pygame.mixer.Sound.play(damage)
 
     if INVINCIBLE:
         player1.texture = scaled_image_Player1_Hit
