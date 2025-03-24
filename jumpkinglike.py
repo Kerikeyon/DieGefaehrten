@@ -5,7 +5,7 @@ pygame.mixer.init()
 clock = pygame.time.Clock()
 screen = pygame.display.set_mode((1000, 600))
 screen_width, screen_height = screen.get_size()
-Cx, Cy = screen_width / 2, screen_height / 2#hi
+Cx, Cy = screen_width / 2, screen_height / 2
 v0x, v0y = 5, 5
 
 # Farben
@@ -36,33 +36,43 @@ from Heart import Heart
 from Deathzone import Deathzone
 
 # Texturen laden und skalieren
-texture_floor = pygame.image.load(r"Texturen\Bodentextur2.webp")
+texture_floor = pygame.image.load(r"Texturen/Bodentextur.png")
 scaled_texture_floor1 = pygame.transform.scale(texture_floor, (520, 500))
 
-Plattform_texture = pygame.image.load(r"Texturen\Flying_Plattform.png")
+Plattform_texture = pygame.image.load(r"Texturen/FlyingPlattform.png")
 scaled_image_platform = pygame.transform.scale(Plattform_texture, (200, 70))
 
 texture_Player1 = pygame.image.load(r"Texturen\WorrierMain.png")
 scaled_image_Player1 = pygame.transform.scale(texture_Player1, (52, 52))
 
+texture_moving_enemy = pygame.image.load (r"Texturen/MovingEnemy.png")
+scaled_image_enemy1 = pygame.transform.scale(texture_moving_enemy,(75,75))
+
 texture_Player1_Hit = pygame.image.load(r"Texturen\WorrierMainBeschädigt.png")
 scaled_image_Player1_Hit = pygame.transform.scale(texture_Player1_Hit, (52, 52))
 
-texture_left_wall = pygame.image.load(r"Texturen\Linke Wand.png")
-texture_right_wall = pygame.image.load(r"Texturen\Rechte Wand.png")
+texture_left_wall = pygame.image.load(r"Texturen\LinkeWand.png")
+texture_right_wall = pygame.image.load(r"Texturen/RechteWand.png")
 
 texture_left_beam = pygame.image.load(r"Texturen\BalkenLinkeWand.png")
 texture_right_beam = pygame.image.load(r"Texturen\BalkenRechteWand.png")
 
 texture_ruby_coin = pygame.image.load (r"Texturen\RubyCoin.png")
 scaled_texture_ruby_coin = pygame.transform.scale(texture_ruby_coin, (35, 30))
-texture_gold_coin = pygame.image.load (r"Texturen\GoldCoin.jpeg")
+texture_gold_coin = pygame.image.load (r"Texturen\GoldCoin.png")
 scaled_texture_gold_coin = pygame.transform.scale(texture_gold_coin, (40, 40))
 
 pygame.mixer.music.load(r"Music\BackgroundMusic1.mp3")
 pygame.mixer.music.play(loops=-1, start=0.0, fade_ms=0)
 
-#hallo
+texture_trophy = pygame.image.load(r"Texturen\Trophy.png")
+scaled_texture_trophy = pygame.transform.scale(texture_trophy, (70, 70))
+
+bg1 = pygame.image.load(r"Texturen\Background.png")
+bg2 = pygame.image.load (r"Texturen\DarkCaveBackground.png")
+bg3 = pygame.image.load(r"texturen\LandscapeBackground.jpg")
+
+
 #Liste Plattformen
 list_platform = [
     Platform(BLACK, -20, 570, 520, 500, texture=scaled_texture_floor1),
@@ -78,7 +88,7 @@ list_platform = [
     Platform(BLACK, 1000-53, -630, 40, 700, texture=texture_right_wall),
 ]
 
-list_enemy = [Enemy(BLUE, 100, 100, 75, 75, 4)]
+list_enemy = [Enemy(BLUE, 100, 125, 75, 75, 4, texture=scaled_image_enemy1), ]
 
 
 #Origin Liste Coins
@@ -106,7 +116,7 @@ list_gold_coins = create_gold_coins()
 list_hearts = [Heart(RED, 20, 20, 40, 40, None), Heart(RED, 80, 20, 40, 40, None), Heart(RED, 140, 20, 40, 40, None)]
 
 # Ziel erstellen
-goal1 = Goal(GREEN, 700, -400, 50, 50)
+goal1 = Goal(WHITE, 700, -380, 60, 80,texture=scaled_texture_trophy)
 
 deathzone1 = Deathzone(WHITE, -1000, 900, 20000, 20000)
 
@@ -123,14 +133,13 @@ while gameactive:
 
     player1.KeyPress()
     camera_offset_y = player1.y - screen_height / 2
-    screen.fill(WHITE)
+    screen.blit(bg1, (0, 0))
 
 
     #Gegner zeichen
     for enemy in list_enemy:
         enemy.update()
         enemy.draw(screen, camera_offset_y)
-        
 
 
     # Plattformen zeichnen
