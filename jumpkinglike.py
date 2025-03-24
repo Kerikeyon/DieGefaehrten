@@ -32,6 +32,8 @@ from Coin import Coin
 from Goal import Goal
 from Platform import Platform
 from Heart import Heart
+from Slope import Slope
+
 
 # Texturen laden und skalieren
 texture_floor = pygame.image.load(r"Texturen\Bodentextur2.webp")
@@ -73,6 +75,12 @@ list_platform = [
     Platform(BLACK, 1000-53, -630, 40, 700, texture=texture_right_wall),
 ]
 
+#Liste Rutschen
+list_slope = [
+    Slope(RED, 200, 200, 100, "left")
+]
+
+#Liste Gegner
 list_enemy = [Enemy(BLUE, 100, 100, 75, 75, 4)]
 
 
@@ -132,6 +140,10 @@ while gameactive:
     # Plattformen zeichnen
     for platform in list_platform:
         platform.draw(screen, camera_offset_y)
+
+    #Rutsche zeichnen
+    for slope in list_slope:
+        slope.draw(screen, camera_offset_y)
 
     # Coins zeichnen
     for coin in list_ruby_coins:
