@@ -35,42 +35,42 @@ from Platform import Platform
 from Heart import Heart
 from Deathzone import Deathzone
 
-# Texturen laden und skalieren
-texture_floor = pygame.image.load(r"Texturen/Bodentextur.png")
+# Texture laden und skalieren
+texture_floor = pygame.image.load(r"Texture/Bodentextur.png")
 scaled_texture_floor1 = pygame.transform.scale(texture_floor, (520, 500))
 
-Plattform_texture = pygame.image.load(r"Texturen/FlyingPlattform.png")
+Plattform_texture = pygame.image.load(r"Texture/FlyingPlattform.png")
 scaled_image_platform = pygame.transform.scale(Plattform_texture, (200, 70))
 
-texture_Player1 = pygame.image.load(r"Texturen\WorrierMain.png")
+texture_Player1 = pygame.image.load(r"Texture\WorrierMain.png")
 scaled_image_Player1 = pygame.transform.scale(texture_Player1, (52, 52))
 
-texture_moving_enemy = pygame.image.load (r"Texturen/MovingEnemy.png")
+texture_moving_enemy = pygame.image.load (r"Texture/MovingEnemy.png")
 scaled_image_enemy1 = pygame.transform.scale(texture_moving_enemy,(75,75))
 
-texture_Player1_Hit = pygame.image.load(r"Texturen\WorrierMainBeschädigt.png")
+texture_Player1_Hit = pygame.image.load(r"Texture\WorrierMainBeschädigt.png")
 scaled_image_Player1_Hit = pygame.transform.scale(texture_Player1_Hit, (52, 52))
 
-texture_left_wall = pygame.image.load(r"Texturen\LinkeWand.png")
-texture_right_wall = pygame.image.load(r"Texturen/RechteWand.png")
+texture_left_wall = pygame.image.load(r"Texture\LinkeWand.png")
+texture_right_wall = pygame.image.load(r"Texture/RechteWand.png")
 
-texture_left_beam = pygame.image.load(r"Texturen\BalkenLinkeWand.png")
-texture_right_beam = pygame.image.load(r"Texturen\BalkenRechteWand.png")
+texture_left_beam = pygame.image.load(r"Texture\BalkenLinkeWand.png")
+texture_right_beam = pygame.image.load(r"Texture\BalkenRechteWand.png")
 
-texture_ruby_coin = pygame.image.load (r"Texturen\RubyCoin.png")
+texture_ruby_coin = pygame.image.load (r"Texture\RubyCoin.png")
 scaled_texture_ruby_coin = pygame.transform.scale(texture_ruby_coin, (35, 30))
-texture_gold_coin = pygame.image.load (r"Texturen\GoldCoin.png")
+texture_gold_coin = pygame.image.load (r"Texture\GoldCoin.png")
 scaled_texture_gold_coin = pygame.transform.scale(texture_gold_coin, (40, 40))
 
 pygame.mixer.music.load(r"Music\BackgroundMusic1.mp3")
 pygame.mixer.music.play(loops=-1, start=0.0, fade_ms=0)
 
-texture_trophy = pygame.image.load(r"Texturen\Trophy.png")
+texture_trophy = pygame.image.load(r"Texture\Trophy.png")
 scaled_texture_trophy = pygame.transform.scale(texture_trophy, (70, 70))
 
-bg1 = pygame.image.load(r"Texturen\Background.png")
-bg2 = pygame.image.load (r"Texturen\DarkCaveBackground.png")
-bg3 = pygame.image.load(r"texturen\LandscapeBackground.jpg")
+bg1 = pygame.image.load(r"Texture\Background.png")
+bg2 = pygame.image.load (r"Texture\DarkCaveBackground.png")
+bg3 = pygame.image.load(r"Texture\LandscapeBackground.jpg")
 
 
 #Liste Plattformen
