@@ -196,7 +196,6 @@ while gameactive:
 
     if INVINCIBLE:
         player1.texture = scaled_image_Player1_Hit
-        player1.f = ORANGE
         current_time = pygame.time.get_ticks()
         elapsed_time = current_time - HITMOMENT
         
@@ -205,11 +204,10 @@ while gameactive:
         else:
             player1.texture = scaled_image_Player1
 
-        if current_time - HITMOMENT >= 1000:
+        if elapsed_time >= 1000:
             player1.texture = scaled_image_Player1
 
             INVINCIBLE = False
-            player1.f = RED
             player1.texture = scaled_image_Player1
 
 
