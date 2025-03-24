@@ -41,6 +41,7 @@ class Player:
         self.rect.x = self.x
         self.rect.y = self.y
 
+
     def applyGravity(self):
         if not self.isjump:
             self.v[1] += self.gravity
@@ -64,3 +65,21 @@ class Player:
             self.isjump = False
             self.jumpCount = 10
             self.v[1] = 0
+
+    def handle_collisions(self, list_platform):
+        for platform in list_platform:
+            if self.rect.colliderect(platform.rect):
+                self.v[1] = 0
+                # Kollision von oben
+                if (self.rect.y + self.rect.h) > platform.rect.y > self.rect.y:
+                    self.y = platform.rect.y - self.rect.h + 0.5
+                    self.isOnPlatform = 0
+                # Kollision von unten
+                elif self.rect.y < (platform.rect.y + platform.rect.h) < (self.rect.y + self.rect.h):
+                    self.y = platform.rect.y + platform.rect.h
+                # Kollision von links
+                elif (self.rect.x + self.rect.w) > platform.rect.x > self.rect.x:
+                    self.x = platform.rect.x - self.rect.w
+                # Kollision von rechts
+                elif self.rect.x < (platform.rect.x + platform.rect.w) < (self.rect.x + self.rect.w):
+                    self.x = platform.rect.x + platform.rect.w
