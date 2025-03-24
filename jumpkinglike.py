@@ -33,6 +33,7 @@ from Coin import Coin
 from Goal import Goal
 from Platform import Platform
 from Heart import Heart
+from Slope import Slope
 from Deathzone import Deathzone
 
 # Texture laden und skalieren
@@ -88,7 +89,13 @@ list_platform = [
     Platform(BLACK, 1000-53, -630, 40, 700, texture=texture_right_wall),
 ]
 
-list_enemy = [Enemy(BLUE, 200, 125, 75, 75, 4, texture=scaled_image_enemy1), ]
+#Liste Rutschen
+list_slope = [
+    Slope(RED, 200, 200, 100, "left")
+]
+
+#Liste Gegner
+list_enemy = [Enemy(BLUE, 100, 100, 75, 75, 4)]
 
 
 #Origin Liste Coins
@@ -145,6 +152,10 @@ while gameactive:
     # Plattformen zeichnen
     for platform in list_platform:
         platform.draw(screen, camera_offset_y)
+
+    #Rutsche zeichnen
+    for slope in list_slope:
+        slope.draw(screen, camera_offset_y)
 
     # Coins zeichnen
     for coin in list_ruby_coins:
@@ -211,9 +222,6 @@ while gameactive:
                 INVINCIBLE = True
                 HITPOINTS -= 1
                 HITMOMENT = pygame.time.get_ticks()
-                hitsound = pygame.mixer.Sound(r"Sounds\damage.mp3")
-                pygame.mixer.Sound.play(hitsound)
-
 
     if INVINCIBLE:
         player1.texture = scaled_image_Player1_Hit
