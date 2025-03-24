@@ -1,10 +1,11 @@
 import pygame
 
 pygame.init()
+pygame.mixer.init()
 clock = pygame.time.Clock()
 screen = pygame.display.set_mode((1000, 600))
 screen_width, screen_height = screen.get_size()
-Cx, Cy = screen_width / 2, screen_height / 2#hi
+Cx, Cy = screen_width / 2, screen_height / 2
 v0x, v0y = 5, 5
 
 # Farben
@@ -33,33 +34,46 @@ from Goal import Goal
 from Platform import Platform
 from Heart import Heart
 from Slope import Slope
+from Deathzone import Deathzone
 
-
-# Texturen laden und skalieren
-texture_floor = pygame.image.load(r"Texturen\Bodentextur2.webp")
+# Texture laden und skalieren
+texture_floor = pygame.image.load(r"Texture/Bodentextur.png")
 scaled_texture_floor1 = pygame.transform.scale(texture_floor, (520, 500))
 
-Plattform_texture = pygame.image.load(r"Texturen\Flying_Plattform.png")
+Plattform_texture = pygame.image.load(r"Texture/FlyingPlattform.png")
 scaled_image_platform = pygame.transform.scale(Plattform_texture, (200, 70))
 
-texture_Player1 = pygame.image.load(r"Texturen\WorrierMain.png")
+texture_Player1 = pygame.image.load(r"Texture\WorrierMain.png")
 scaled_image_Player1 = pygame.transform.scale(texture_Player1, (52, 52))
 
-texture_Player1_Hit = pygame.image.load(r"Texturen\WorrierMainBeschädigt.png")
+texture_moving_enemy = pygame.image.load (r"Texture/MovingEnemy.png")
+scaled_image_enemy1 = pygame.transform.scale(texture_moving_enemy,(75,75))
+
+texture_Player1_Hit = pygame.image.load(r"Texture\WorrierMainBeschädigt.png")
 scaled_image_Player1_Hit = pygame.transform.scale(texture_Player1_Hit, (52, 52))
 
-texture_left_wall = pygame.image.load(r"Texturen\Linke Wand.png")
-texture_right_wall = pygame.image.load(r"Texturen\Rechte Wand.png")
+texture_left_wall = pygame.image.load(r"Texture\LinkeWand.png")
+texture_right_wall = pygame.image.load(r"Texture/RechteWand.png")
 
-texture_left_beam = pygame.image.load(r"Texturen\BalkenLinkeWand.png")
-texture_right_beam = pygame.image.load(r"Texturen\BalkenRechteWand.png")
+texture_left_beam = pygame.image.load(r"Texture\BalkenLinkeWand.png")
+texture_right_beam = pygame.image.load(r"Texture\BalkenRechteWand.png")
 
-texture_ruby_coin = pygame.image.load (r"Texturen\RubyCoin.png")
+texture_ruby_coin = pygame.image.load (r"Texture\RubyCoin.png")
 scaled_texture_ruby_coin = pygame.transform.scale(texture_ruby_coin, (35, 30))
-texture_gold_coin = pygame.image.load (r"Texturen\GoldCoin.jpeg")
+texture_gold_coin = pygame.image.load (r"Texture\GoldCoin.png")
 scaled_texture_gold_coin = pygame.transform.scale(texture_gold_coin, (40, 40))
 
-#hallo
+pygame.mixer.music.load(r"Music\BackgroundMusic1.mp3")
+pygame.mixer.music.play(loops=-1, start=0.0, fade_ms=0)
+
+texture_trophy = pygame.image.load(r"Texture\Trophy.png")
+scaled_texture_trophy = pygame.transform.scale(texture_trophy, (70, 70))
+
+bg1 = pygame.image.load(r"Texture\Background.png")
+bg2 = pygame.image.load (r"Texture\DarkCaveBackground.png")
+bg3 = pygame.image.load(r"Texture\LandscapeBackground.jpg")
+
+
 #Liste Plattformen
 list_platform = [
     Platform(BLACK, -20, 570, 520, 500, texture=scaled_texture_floor1),
@@ -109,7 +123,9 @@ list_gold_coins = create_gold_coins()
 list_hearts = [Heart(RED, 20, 20, 40, 40, None), Heart(RED, 80, 20, 40, 40, None), Heart(RED, 140, 20, 40, 40, None)]
 
 # Ziel erstellen
-goal1 = Goal(GREEN, 700, -400, 50, 50)
+goal1 = Goal(WHITE, 700, -380, 60, 80,texture=scaled_texture_trophy)
+
+deathzone1 = Deathzone(WHITE, -1000, 900, 20000, 20000)
 
 
 # Spieler erstellen
@@ -122,19 +138,15 @@ while gameactive:
         if event.type == pygame.QUIT:
             gameactive = False
 
-
-
-
     player1.KeyPress()
     camera_offset_y = player1.y - screen_height / 2
-    screen.fill(WHITE)
+    screen.blit(bg1, (0, 0))
 
 
     #Gegner zeichen
     for enemy in list_enemy:
         enemy.update()
         enemy.draw(screen, camera_offset_y)
-        
 
 
     # Plattformen zeichnen
@@ -154,7 +166,8 @@ while gameactive:
 
     # Goal zeichnen
     goal1.draw(screen, camera_offset_y)
-
+    #Deathzone Zeichnen
+    deathzone1.draw(screen, camera_offset_y)
     # Spieler zeichnen
     player1.draw(screen, camera_offset_y)
 
@@ -190,10 +203,14 @@ while gameactive:
     # Coin-Kollision
     for i in range(len(list_ruby_coins)-1, -1, -1):
         if player1.rect.colliderect(list_ruby_coins[i].rect):
+            collect = pygame.mixer.Sound(r"Sounds\CoinCollect1.mp3")
+            pygame.mixer.Sound.play(collect)
             del list_ruby_coins[i]
             score += 1
     for i in range(len(list_gold_coins)-1, -1, -1):
         if player1.rect.colliderect(list_gold_coins[i].rect):
+            collect = pygame.mixer.Sound(r"Sounds\CoinCollect1.mp3")
+            pygame.mixer.Sound.play(collect)
             del list_gold_coins[i]
             score += 2
 
@@ -226,6 +243,21 @@ while gameactive:
     # Goal Kollision
     reset_triggered = False
     if player1.rect.colliderect(goal1.rect):
+        victory = pygame.mixer.Sound(r"Sounds\victory1.mp3")
+        pygame.mixer.Sound.play(victory)
+        if not reset_triggered:
+            reset_triggered = True  # Reset nur einmal auslösen
+            player1 = Player(RED, Cx - 25, 450, 50, 50, texture=scaled_image_Player1)
+            list_ruby_coins[:] = create_ruby_coins()
+            list_gold_coins[:] = create_gold_coins()
+            score = 0
+            INVINCIBLE = False
+            HITPOINTS = 3
+    else:
+        reset_triggered = False
+
+    # Deathzone Kollision
+    if player1.rect.colliderect(deathzone1.rect):
         if not reset_triggered:
             reset_triggered = True  # Reset nur einmal auslösen
             player1 = Player(RED, Cx - 25, 450, 50, 50, texture=scaled_image_Player1)

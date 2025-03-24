@@ -11,5 +11,7 @@ class Goal:
         self.rect = pygame.Rect(self.x, self.y, self.w, self.h)
 
     def draw(self, screen, camera_offset_y):
-        draw_rect = pygame.Rect(self.x, self.y - camera_offset_y, self.w, self.h)
-        pygame.draw.rect(screen, self.f, draw_rect)
+        if self.texture:
+            screen.blit(self.texture, (self.x, self.y - camera_offset_y))
+        else:
+            pygame.draw.rect(screen, self.f, (self.x, self.y - camera_offset_y, self.w, self.h))
