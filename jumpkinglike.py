@@ -88,7 +88,7 @@ list_platform = [
     Platform(BLACK, 1000-53, -630, 40, 700, texture=texture_right_wall),
 ]
 
-list_enemy = [Enemy(BLUE, 100, 125, 75, 75, 4, texture=scaled_image_enemy1), ]
+list_enemy = [Enemy(BLUE, 200, 125, 75, 75, 4, texture=scaled_image_enemy1), ]
 
 
 #Origin Liste Coins
@@ -211,6 +211,9 @@ while gameactive:
                 INVINCIBLE = True
                 HITPOINTS -= 1
                 HITMOMENT = pygame.time.get_ticks()
+                hitsound = pygame.mixer.Sound(r"Sounds\damage.mp3")
+                pygame.mixer.Sound.play(hitsound)
+
 
     if INVINCIBLE:
         player1.texture = scaled_image_Player1_Hit
