@@ -1,6 +1,7 @@
 import pygame
 
 pygame.init()
+pygame.mixer.init()
 clock = pygame.time.Clock()
 screen = pygame.display.set_mode((1000, 600))
 screen_width, screen_height = screen.get_size()
@@ -32,6 +33,7 @@ from Coin import Coin
 from Goal import Goal
 from Platform import Platform
 from Heart import Heart
+from Deathzone import Deathzone
 
 # Texturen laden und skalieren
 texture_floor = pygame.image.load(r"Texturen\Bodentextur2.webp")
@@ -56,6 +58,9 @@ texture_ruby_coin = pygame.image.load (r"Texturen\RubyCoin.png")
 scaled_texture_ruby_coin = pygame.transform.scale(texture_ruby_coin, (35, 30))
 texture_gold_coin = pygame.image.load (r"Texturen\GoldCoin.jpeg")
 scaled_texture_gold_coin = pygame.transform.scale(texture_gold_coin, (40, 40))
+
+pygame.mixer.music.load(r"Music\BackgroundMusic1.mp3")
+pygame.mixer.music.play(loops=-1, start=0.0, fade_ms=0)
 
 #hallo
 #Liste Plattformen
@@ -103,6 +108,8 @@ list_hearts = [Heart(RED, 20, 20, 40, 40, None), Heart(RED, 80, 20, 40, 40, None
 # Ziel erstellen
 goal1 = Goal(GREEN, 700, -400, 50, 50)
 
+deathzone1 = Deathzone(WHITE, -1000, 900, 20000, 20000)
+
 
 # Spieler erstellen
 player1 = Player(RED, Cx - 25, 450, 50, 50, texture=scaled_image_Player1)
@@ -113,9 +120,6 @@ while gameactive:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             gameactive = False
-
-
-
 
     player1.KeyPress()
     camera_offset_y = player1.y - screen_height / 2
@@ -142,7 +146,8 @@ while gameactive:
 
     # Goal zeichnen
     goal1.draw(screen, camera_offset_y)
-
+    #Deathzone Zeichnen
+    deathzone1.draw(screen, camera_offset_y)
     # Spieler zeichnen
     player1.draw(screen, camera_offset_y)
 
@@ -214,6 +219,21 @@ while gameactive:
     # Goal Kollision
     reset_triggered = False
     if player1.rect.colliderect(goal1.rect):
+        victory = pygame.mixer.Sound(r"Sounds\victory1.mp3")
+        pygame.mixer.Sound.play(victory)
+        if not reset_triggered:
+            reset_triggered = True  # Reset nur einmal auslösen
+            player1 = Player(RED, Cx - 25, 450, 50, 50, texture=scaled_image_Player1)
+            list_ruby_coins[:] = create_ruby_coins()
+            list_gold_coins[:] = create_gold_coins()
+            score = 0
+            INVINCIBLE = False
+            HITPOINTS = 3
+    else:
+        reset_triggered = False
+
+    # Deathzone Kollision
+    if player1.rect.colliderect(deathzone1.rect):
         if not reset_triggered:
             reset_triggered = True  # Reset nur einmal auslösen
             player1 = Player(RED, Cx - 25, 450, 50, 50, texture=scaled_image_Player1)
