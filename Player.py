@@ -21,6 +21,8 @@ class Player:
         self.jump_cooldown = 500
         self.isOnPlatform = 0
         self.jump_sound = pygame.mixer.Sound(r"Sounds\jump1.mp3")
+        self.on_slope = False
+        self.slope_slide_speed = 0
 
     def draw(self, screen, camera_offset_y):
         if self.texture:
@@ -32,7 +34,7 @@ class Player:
     def KeyPress(self, ):
         keys = pygame.key.get_pressed()
         current_time = pygame.time.get_ticks()
-        if keys[pygame.K_SPACE] and not self.isjump and (current_time - self.nextjump) >= self.jump_cooldown and self.isOnPlatform <2:
+        if keys[pygame.K_SPACE] and not self.isjump and (current_time - self.nextjump) >= self.jump_cooldown and self.isOnPlatform <1:
             self.isOnPlatform += 1
             self.isjump = True
             self.jumpCount = 10

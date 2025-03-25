@@ -4,11 +4,10 @@ pygame.init()
 pygame.mixer.init()
 clock = pygame.time.Clock()
 screen = pygame.display.set_mode((1000, 600))
-clock = pygame.time.Clock()
+game_running = False
 screen_width, screen_height = screen.get_size()
 Cx, Cy = screen_width / 2, screen_height / 2
 keys = pygame.key.get_pressed()
-
 
 # Farben
 WHITE = (255, 255, 255)
@@ -31,10 +30,12 @@ from Platform import Platform
 from Heart import Heart
 from Slope import Slope
 from Deathzone import Deathzone
+from PowerUp import PowerUp
 
 def start_game():
 
     v0x, v0y = 5, 5
+    
 
     # Globale Variablen für Invincibility und Leben
     invincible = False
@@ -117,6 +118,7 @@ def start_game():
     #Liste Rutschen
     list_slope = [
             Slope(RED, 200, 200, 100, "left")
+
     ]
 
     list_enemy = [Enemy(BLUE, 200, 100, 75, 75, 4, texture=scaled_image_enemy1)]
@@ -152,16 +154,24 @@ def start_game():
 
     deathzone1 = Deathzone(WHITE, -1000, 900, 20000, 20000)
 
+    powerup = PowerUp(500, 300, 30, 30)
 
     # create player
     player1 = Player(RED, Cx - 25, 450, 50, 50, texture=scaled_image_Player1)
 
     # Hauptspielschleife
     gameactive = True
+    global game_running
+
+    game_running = True
+
     while gameactive:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 gameactive = False
+            elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+                menu()
+
 
         player1.KeyPress()
         camera_offset_y = player1.y - screen_height / 2
@@ -180,7 +190,7 @@ def start_game():
         #Rutsche zeichnen
         for slope in list_slope:
             slope.draw(screen, camera_offset_y)
-
+        
         # Coins zeichnen
         for coin in list_ruby_coins:
             coin.draw(screen, camera_offset_y)
@@ -202,6 +212,9 @@ def start_game():
         player1.handle_collisions(list_platform)
         player1.rect.topleft = (player1.x, player1.y)
         player1.resetJump()
+        powerup.check_collision(player1)
+        powerup.update()
+        powerup.draw(screen, camera_offset_y)
 
         # Coin-Kollision
         for i in range(len(list_ruby_coins)-1, -1, -1):
@@ -298,6 +311,8 @@ def start_game():
 
 # values after 'text' are for centralizing text
 def button(x, y, w, h, text, text_offset_x, text_offset_y, color):
+    global game_running, gameactive  # Hier gameactive als global deklarieren!
+
     mouse_pos = pygame.mouse.get_pos()
     click = pygame.mouse.get_pressed()
 
@@ -309,31 +324,52 @@ def button(x, y, w, h, text, text_offset_x, text_offset_y, color):
     if mouse_pos[0] >= x and mouse_pos[0] <= x + w and mouse_pos[1] >= y and mouse_pos[1] <= y + h:
         pygame.draw.rect(screen, (210, 210, 210), (x, y, w, h))
         screen.blit(button_text, (x + text_offset_x, y + text_offset_y))
-        if click[0]:
-            if text == 'Start':
+
+        if click[0]:  # Linksklick gedrückt?
+            print (text)
+            pygame.time.delay(150)  # Kurze Verzögerung für bessere Button-Reaktion
+            if text == 'start':
+                game_running = True
                 start_game()
+            elif text == 'Resume':
+                game_running = True  # Menü verlassen und ins Spiel zurückkehren
+                return
             elif text == 'Options':
                 options()
             elif text == 'Quit':
                 pygame.quit()
+                exit()
             elif text == 'Back':
                 menu()
             elif text == '...':
                 menu()
 
+
 def menu():
+    global game_running
+    game_started = False
+    if game_running:
+        game_running = False
+        game_started = True
 
- while True:
+    while not game_running:  # Menü läuft nur, wenn das Spiel pausiert ist
+        screen.fill(BLACK)
 
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-           pygame.quit()
-    pygame.display.update()
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                exit()
 
-    screen.fill(BLACK)
-    button(Cx - 100, 100, 200, 70, 'Start', 50, 20, WHITE)
-    button(Cx - 100, 225, 200, 70, 'Options', 40, 20, WHITE)
-    button(Cx - 100, 350, 200, 70, 'Quit', 50, 20, WHITE)
+        if game_running:  # Falls Resume gedrückt wurde, verlasse das Menü
+            return
+
+        button(Cx - 100, 100, 200, 70, 'start' if not game_started else 'Resume', 40, 20, WHITE)
+        #button(Cx - 100, 100, 200, 70, 'Resume', 40, 20, WHITE)
+        button(Cx - 100, 225, 200, 70, 'Options', 40, 20, WHITE)
+        button(Cx - 100, 350, 200, 70, 'Quit', 50, 20, WHITE)
+
+        pygame.display.update()
+
 
 def options():
  while True:
