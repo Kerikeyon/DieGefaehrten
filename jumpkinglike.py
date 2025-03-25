@@ -37,17 +37,17 @@ def start_game():
     v0x, v0y = 5, 5
 
     # Globale Variablen für Invincibility und Leben
-    INVINCIBLE = False
-    HITPOINTS = 3
+    invincible = False
+    hitpoints = 3
     score = 0
-    HITMOMENT = 0
+    hitmoment = 0
 
     # Texture laden und skalieren
     texture_floor = pygame.image.load(r"Texture/Bodentextur.png")
     scaled_texture_floor1 = pygame.transform.scale(texture_floor, (520, 500))
 
-    Plattform_texture = pygame.image.load(r"Texture/FlyingPlattform.png")
-    scaled_image_platform = pygame.transform.scale(Plattform_texture, (200, 70))
+    texture_flying_plattform = pygame.image.load(r"Texture/FlyingPlattform.png")
+    scaled_image_platform = pygame.transform.scale(texture_flying_plattform, (200, 70))
 
     texture_Player1 = pygame.image.load(r"Texture\WorrierMain.png")
     scaled_image_Player1 = pygame.transform.scale(texture_Player1, (52, 52))
@@ -220,26 +220,26 @@ def start_game():
         # Enemy-Kollision
         for enemy in list_enemy:
             if player1.rect.colliderect(enemy.rect):
-                if not INVINCIBLE:
-                    INVINCIBLE = True
-                    HITPOINTS -= 1
-                    HITMOMENT = pygame.time.get_ticks()
+                if not invincible:
+                    invincible = True
+                    hitpoints -= 1
+                    hitmoment = pygame.time.get_ticks()
                     damage = pygame.mixer.Sound(r"Sounds\damage.mp3")
                     pygame.mixer.Sound.play(damage)
 
-        if INVINCIBLE:
+        if invincible:
             player1.texture = scaled_image_Player1_Hit
             player1.f = ORANGE
             current_time = pygame.time.get_ticks()
-            elapsed_time = current_time - HITMOMENT
+            elapsed_time = current_time - hitmoment
 
             if (elapsed_time // 50) % 2 == 0:
                 player1.texture = scaled_image_Player1_Hit
             else:
                 player1.texture = scaled_image_Player1
-            if current_time - HITMOMENT >= 1000:
+            if current_time - hitmoment >= 1000:
                 player1.texture = scaled_image_Player1
-                INVINCIBLE = False
+                invincible = False
                 player1.f = RED
                 player1.texture = scaled_image_Player1
 
@@ -252,8 +252,8 @@ def start_game():
                 list_ruby_coins[:] = create_ruby_coins()
                 list_gold_coins[:] = create_gold_coins()
                 score = 0
-                INVINCIBLE = False
-                HITPOINTS = 3
+                invincible = False
+                hitpoints = 3
                 victory = pygame.mixer.Sound(r"Sounds\victory1.mp3")
                 pygame.mixer.Sound.play(victory)
         else:
@@ -267,14 +267,14 @@ def start_game():
                 list_ruby_coins[:] = create_ruby_coins()
                 list_gold_coins[:] = create_gold_coins()
                 score = 0
-                INVINCIBLE = False
-                HITPOINTS = 3
+                invincible = False
+                hitpoints = 3
         else:
             reset_triggered = False
 
         # Spieler-Reset
-        if HITPOINTS <= 0:
-            HITPOINTS = 3
+        if hitpoints <= 0:
+            hitpoints = 3
             score = 0
             list_ruby_coins[:] = create_ruby_coins()
             list_gold_coins[:] = create_gold_coins()
@@ -285,7 +285,7 @@ def start_game():
         screen.blit(score_text, (37, 65))
 
 
-        for i in range(HITPOINTS):
+        for i in range(hitpoints):
             list_hearts[i].draw(screen, 0)
 
         #menu button
