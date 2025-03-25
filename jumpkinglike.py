@@ -91,12 +91,12 @@ def start_game():
         Platform(BLACK, 0, -30, 40, 700, texture=texture_left_wall),
         Platform(BLACK, 0, -630, 40, 700, texture=texture_left_wall),
         Platform(BLACK, 1000-53, -30, 40, 700, texture=texture_right_wall),
-        Platform(BLACK, 1000-53, -630, 40, 700, texture=texture_right_wall),
+        Platform(BLACK, 1000-53, -630, 40, 700, texture=texture_right_wall)
     ]
 
     #Liste Rutschen
-    list_slope = [
-        Slope(RED, 200, 200, 100, "left")
+    list_slopes = [
+        Slope(RED, 465, 209, 190, "right")
     ]
 
     list_enemy = [Enemy(BLUE, 200, 100, 75, 75, 4, texture=scaled_image_enemy1)]
@@ -142,7 +142,7 @@ def start_game():
                 gameactive = False
         
         player1.KeyPress()
-        camera_offset_y = player1.y - screen_height / 2
+        camera_offset_y = player1.rect.y - screen_height / 2
         screen.blit(bg1, (0, 0))
 
 
@@ -156,7 +156,7 @@ def start_game():
             platform.draw(screen, camera_offset_y)
 
         #Rutsche zeichnen
-        for slope in list_slope:
+        for slope in list_slopes:
             slope.draw(screen, camera_offset_y)
         
         # Coins zeichnen
@@ -177,8 +177,8 @@ def start_game():
         player1.applyGravity()
         player1.jump()
         # Plattform-Kollisionen
-        player1.handle_collisions(list_platform)
-        player1.rect.topleft = (player1.x, player1.y)
+        player1.handle_collisions(list_platform, list_slopes)
+        player1.rect.topleft = (player1.rect.x, player1.rect.y)
         player1.resetJump()
 
         # Coin-Kollision
