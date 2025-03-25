@@ -6,8 +6,9 @@ clock = pygame.time.Clock()
 screen = pygame.display.set_mode((1000, 600))
 clock = pygame.time.Clock()
 screen_width, screen_height = screen.get_size()
-Cx, Cy = screen_width / 2, screen_height / 2#hi
+Cx, Cy = screen_width / 2, screen_height / 2
 keys = pygame.key.get_pressed()
+
 
 # Farben
 WHITE = (255, 255, 255)
@@ -16,7 +17,7 @@ RED = (255, 0, 0)
 ORANGE = (255, 128, 0)
 YELLOW = (255, 255, 0)
 GREEN = (0, 255, 0)
-BLUE = (0, 0, 255)#blabla
+BLUE = (0, 0, 255)
 
 # Scoreanzeige
 font = pygame.font.Font('freesansbold.ttf', 32)
@@ -34,7 +35,6 @@ from Deathzone import Deathzone
 def start_game():
 
     v0x, v0y = 5, 5
-    
 
     # Globale Variablen für Invincibility und Leben
     INVINCIBLE = False
@@ -42,7 +42,7 @@ def start_game():
     score = 0
     HITMOMENT = 0
 
-        # Texture laden und skalieren
+    # Texture laden und skalieren
     texture_floor = pygame.image.load(r"Texture/Bodentextur.png")
     scaled_texture_floor1 = pygame.transform.scale(texture_floor, (520, 500))
 
@@ -75,28 +75,48 @@ def start_game():
     texture_trophy = pygame.image.load(r"Texture\Trophy.png")
     scaled_texture_trophy = pygame.transform.scale(texture_trophy, (70, 70))
 
-    bg1 = pygame.image.load(r"Texture\Background.png")
-    bg2 = pygame.image.load (r"Texture\DarkCaveBackground.png")
-    bg3 = pygame.image.load(r"Texture\LandscapeBackground.jpg")
-    
+    texture_heart = pygame.image.load(r"Texture/Heart.png")
+    scaled_texture_heart = pygame.transform.scale(texture_heart, (45, 35))
+
+    bg1 = pygame.image.load (r"Texture\DarkCaveBackground.png")
+    bg3 = pygame.image.load(r"Texture\LandscapeBackground.png")
+    bg2 = pygame.image.load(r"Texture\MoonBackground.png")
+
+    scaled_bg1 = pygame.transform.scale(bg1, (screen_width, screen_height))
+    scaled_bg2 = pygame.transform.scale(bg2, (screen_width, screen_height))
+    scaled_bg3 = pygame.transform.scale(bg3, (screen_width, screen_height))
+
+    backgrounds = [scaled_bg1, scaled_bg2, scaled_bg3]
+
+    def draw_background (screen, backgrounds, camera_offset_y, scroll_factor):
+        total_height = sum (bg.get_height() for bg in backgrounds)
+        offset = (camera_offset_y * scroll_factor) % total_height
+        y = -offset
+        while y < screen.get_height():
+            for bg in backgrounds:
+                screen.blit(bg, (0,y))
+                y += bg.get_height()
+                if y >= screen_height:
+                    break
+
     #Liste Plattformen
     list_platform = [
-        Platform(BLACK, -20, 570, 520, 500, texture=scaled_texture_floor1),
-        Platform(BLACK, 500, 570, 520, 500, texture=scaled_texture_floor1),
-        Platform(WHITE, 640, 400, 200, 30, texture=scaled_image_platform),
-        Platform(WHITE, 440, 10, 200, 30, texture=scaled_image_platform),
-        Platform(WHITE, 70, -200, 200, 30, texture=scaled_image_platform),
-        Platform(WHITE, 13, 203, 451, 47, texture=texture_left_beam),
-        Platform(WHITE, 538, -309, 451, 47, texture=texture_right_beam),
-        Platform(BLACK, 0, -30, 40, 700, texture=texture_left_wall),
-        Platform(BLACK, 0, -630, 40, 700, texture=texture_left_wall),
-        Platform(BLACK, 1000-53, -30, 40, 700, texture=texture_right_wall),
-        Platform(BLACK, 1000-53, -630, 40, 700, texture=texture_right_wall),
+    Platform(BLACK, -20, 570, 520, 500, texture=scaled_texture_floor1),
+    Platform(BLACK, 500, 570, 520, 500, texture=scaled_texture_floor1),
+    Platform(WHITE, 640, 400, 200, 30, texture=scaled_image_platform),
+    Platform(WHITE, 440, 10, 200, 30, texture=scaled_image_platform),
+    Platform(WHITE, 70, -200, 200, 30, texture=scaled_image_platform),
+    Platform(WHITE, 13, 203, 451, 47, texture=texture_left_beam),
+    Platform(WHITE, 538, -309, 451, 47, texture=texture_right_beam),
+    Platform(BLACK, 0, -30, 40, 700, texture=texture_left_wall),
+    Platform(BLACK, 0, -630, 40, 700, texture=texture_left_wall),
+    Platform(BLACK, 1000-53, -30, 40, 700, texture=texture_right_wall),
+    Platform(BLACK, 1000-53, -630, 40, 700, texture=texture_right_wall),
     ]
 
     #Liste Rutschen
     list_slope = [
-        Slope(RED, 200, 200, 100, "left")
+            Slope(RED, 200, 200, 100, "left")
     ]
 
     list_enemy = [Enemy(BLUE, 200, 100, 75, 75, 4, texture=scaled_image_enemy1)]
@@ -121,8 +141,11 @@ def start_game():
     list_ruby_coins = create_ruby_coins()
     list_gold_coins = create_gold_coins()
 
-    #List leben
-    list_hearts = [Heart(RED, 20, 20, 40, 40, None), Heart(RED, 80, 20, 40, 40, None), Heart(RED, 140, 20, 40, 40, None)]
+
+    #Liste leben
+    list_hearts = [Heart(YELLOW, Cx -75, 20, 30, 30, scaled_texture_heart),
+                   Heart(YELLOW, Cx -25, 20, 30, 30, scaled_texture_heart),
+                   Heart(YELLOW, Cx +25, 20, 30, 30, scaled_texture_heart)]
 
     # Ziel erstellen
     goal1 = Goal(WHITE, 700, -380, 60, 80,texture=scaled_texture_trophy)
@@ -133,24 +156,23 @@ def start_game():
     # create player
     player1 = Player(RED, Cx - 25, 450, 50, 50, texture=scaled_image_Player1)
 
-    # main game loop
+    # Hauptspielschleife
     gameactive = True
-
     while gameactive:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 gameactive = False
-        
+
         player1.KeyPress()
         camera_offset_y = player1.y - screen_height / 2
-        screen.blit(bg1, (0, 0))
-
+        background_scroll_faktor = 0.2
+        draw_background(screen, backgrounds, camera_offset_y, background_scroll_faktor)
 
         #Gegner zeichen
         for enemy in list_enemy:
             enemy.update()
             enemy.draw(screen, camera_offset_y)
-                
+
         # Plattformen zeichnen
         for platform in list_platform:
             platform.draw(screen, camera_offset_y)
@@ -158,7 +180,7 @@ def start_game():
         #Rutsche zeichnen
         for slope in list_slope:
             slope.draw(screen, camera_offset_y)
-        
+
         # Coins zeichnen
         for coin in list_ruby_coins:
             coin.draw(screen, camera_offset_y)
@@ -210,7 +232,7 @@ def start_game():
             player1.f = ORANGE
             current_time = pygame.time.get_ticks()
             elapsed_time = current_time - HITMOMENT
-            
+
             if (elapsed_time // 50) % 2 == 0:
                 player1.texture = scaled_image_Player1_Hit
             else:
@@ -249,7 +271,7 @@ def start_game():
                 HITPOINTS = 3
         else:
             reset_triggered = False
-    
+
         # Spieler-Reset
         if HITPOINTS <= 0:
             HITPOINTS = 3
@@ -259,13 +281,13 @@ def start_game():
             player1 = Player(RED, Cx - 25, 450, 50, 50, texture=scaled_image_Player1)
 
         # Scoreanzeige zeichnen
-        score_text = font.render('Score = ' + str(score), True, BLACK)
+        score_text = font.render('Score = ' + str(score), True, YELLOW)
         screen.blit(score_text, (37, 65))
 
 
         for i in range(HITPOINTS):
             list_hearts[i].draw(screen, 0)
-        
+
         #menu button
         button(900, 50, 40, 40, '...', 0, 0, (210,210,210))
 
@@ -300,7 +322,7 @@ def button(x, y, w, h, text, text_offset_x, text_offset_y, color):
                 menu()
 
 def menu():
- 
+
  while True:
 
     for event in pygame.event.get():
@@ -312,7 +334,7 @@ def menu():
     button(Cx - 100, 100, 200, 70, 'Start', 50, 20, WHITE)
     button(Cx - 100, 225, 200, 70, 'Options', 40, 20, WHITE)
     button(Cx - 100, 350, 200, 70, 'Quit', 50, 20, WHITE)
- 
+
 def options():
  while True:
 
