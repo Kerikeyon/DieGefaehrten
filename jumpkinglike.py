@@ -96,7 +96,7 @@ def start_game():
 
     #Liste Rutschen
     list_slopes = [
-        Slope(RED, 465, 209, 190, "right")
+        Slope(RED, 65, 209, 190, "right")
     ]
 
     list_enemy = [Enemy(BLUE, 200, 100, 75, 75, 4, texture=scaled_image_enemy1)]
