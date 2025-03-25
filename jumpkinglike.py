@@ -220,12 +220,14 @@ def start_game():
         for i in range(len(list_ruby_coins)-1, -1, -1):
             if player1.rect.colliderect(list_ruby_coins[i].rect):
                 collect = pygame.mixer.Sound(r"Sounds\CoinCollect1.mp3")
+                pygame.mixer.Sound.set_volume(collect, 0.3)
                 pygame.mixer.Sound.play(collect)
                 del list_ruby_coins[i]
                 score += 1
         for i in range(len(list_gold_coins)-1, -1, -1):
             if player1.rect.colliderect(list_gold_coins[i].rect):
                 collect = pygame.mixer.Sound(r"Sounds\CoinCollect1.mp3")
+                pygame.mixer.Sound.set_volume(collect, 0.3)
                 pygame.mixer.Sound.play(collect)
                 del list_gold_coins[i]
                 score += 2
