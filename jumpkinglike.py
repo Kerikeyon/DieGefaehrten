@@ -127,6 +127,8 @@ def start_game():
     Platform(WHITE, 640, 10, 200, 30, texture=scaled_image_platform),
     Platform(WHITE, 100, -100, 200, 30, texture=scaled_image_platform),
     Platform(WHITE, 730, -800, 200, 30, texture=scaled_image_platform),
+    Platform(WHITE, 100, -1000, 200, 30, texture=scaled_image_platform),
+    Platform(WHITE, 250, -1600, 200, 30, texture=scaled_image_platform),
     Platform(WHITE, 60, -570, 100, 15, texture=scaled_image_platform2),
 
     Platform(WHITE, 16, 203, 451, 47, texture=texture_left_beam),
@@ -137,9 +139,13 @@ def start_game():
     Platform(BLACK, 0, -30, 40, 700, texture=texture_left_wall),
     Platform(BLACK, 0, -630, 40, 700, texture=texture_left_wall),
     Platform(BLACK, 0, -1230, 40, 700, texture=texture_left_wall),
+    Platform(BLACK, 0, -1830, 40, 700, texture=texture_left_wall),
+    Platform(BLACK, 0, -2430, 40, 700, texture=texture_left_wall),
     Platform(BLACK, 1000-53, -30, 40, 700, texture=texture_right_wall),
     Platform(BLACK, 1000-53, -630, 40, 700, texture=texture_right_wall),
     Platform(BLACK, 1000-53, -1230, 40, 700, texture=texture_right_wall),
+    Platform(BLACK, 1000 - 53, -1830, 40, 700, texture=texture_right_wall),
+    Platform(BLACK, 1000 - 53, -2430, 40, 700, texture=texture_right_wall),
 
     Platform(BLACK,425 ,-717,50,324, texture=texture_stone_pole_short),
     ]
@@ -180,6 +186,8 @@ def start_game():
 
     list_powerups = [PowerUp(410, -200, 40, 40, texture=scaled_double_jump_icon),
                      PowerUp(670, -600, 40, 40, texture=scaled_double_jump_icon),
+                    PowerUp(400, -1200, 40, 40, texture=scaled_double_jump_icon),
+                     PowerUp(650, -1470, 40, 40, texture=scaled_double_jump_icon),
     ]
 
     # Ziel erstellen
