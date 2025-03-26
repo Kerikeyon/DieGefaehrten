@@ -10,7 +10,7 @@ class PowerUp:
         self.texture = texture
         self.rect = pygame.Rect(self.x, self.y, self.width, self.height)
         self.collected = False
-        self.respawn_time = 3  # Sekunden
+        self.respawn_time = 1.5  # Sekunden
         self.last_collected_time = 0
 
     def draw(self, screen, camera_offset_y):

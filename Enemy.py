@@ -24,7 +24,6 @@ class Enemy:
         if self.x > self.start_x + self.movrange or self.x < self.start_x - self.movrange:
             self.direction *= -1
 
-
     def draw(self, screen, camera_offset_y):
 
         draw_pos = (self.x, self.y - camera_offset_y)
