@@ -32,6 +32,7 @@ from Heart import Heart
 from Slope import Slope
 from Deathzone import Deathzone
 from PowerUp import PowerUp
+from Static_Enemy import Static_Enemy
 
 def start_game():
 
@@ -52,11 +53,22 @@ def start_game():
     scaled_image_platform = pygame.transform.scale(texture_flying_plattform, (200, 70))
     scaled_image_platform2 = pygame.transform.scale(texture_flying_plattform, (100,35))
 
+    texture_slippery_middle = pygame.image.load(r"Texture/SlipperyMitte.png")
+    scaled_slippery_middle = pygame.transform.scale(texture_slippery_middle, (50, 88))
+    texture_slippery_left = pygame.image.load(r"Texture/SlipperyLinks.png")
+    scaled_slippery_left = pygame.transform.scale(texture_slippery_left, (55, 55))
+    texture_slippery_right = pygame.image.load(r"Texture/SlipperyRechts.png")
+    scaled_slippery_right = pygame.transform.scale(texture_slippery_right, (55, 55))
+
     texture_player1 = pygame.image.load(r"Texture\WorrierMain.png")
     scaled_image_player1 = pygame.transform.scale(texture_player1, (52, 52))
 
     texture_moving_enemy = pygame.image.load (r"Texture/MovingEnemy.png")
     scaled_image_enemy1 = pygame.transform.scale(texture_moving_enemy,(75,75))
+    texture_spikes = pygame.image.load(r"Texture/Spikes.png")
+    scaled_spikes = pygame.transform.scale(texture_spikes, (200,50))
+    texture_short_spikes =pygame.image.load(r"Texture/ShortSpikes.png")
+    scaled_short_spikes = pygame.transform.scale(texture_short_spikes, (100,50))
 
     texture_player1_hit = pygame.image.load(r"Texture\WorrierMainBeschädigt.png")
     scaled_image_player1_hit = pygame.transform.scale(texture_player1_hit, (52, 52))
@@ -77,9 +89,6 @@ def start_game():
 
     texture_right_short_straight_beam = pygame.image.load(r"Texture/BalkenGeradeRechts.png")
     scaled_right_straight_short = pygame.transform.scale(texture_right_short_straight_beam, (120, 50))
-
-    texture_slippery_plattform = pygame.image.load(r"Texture/SlipperyPlattformSkeleton.png")
-    scaled_slippery_plattform = pygame.transform.scale(texture_slippery_plattform, (146, 106))
 
     texture_ruby_coin = pygame.image.load (r"Texture\RubyCoin.png")
     scaled_texture_ruby_coin = pygame.transform.scale(texture_ruby_coin, (35, 30))
@@ -121,55 +130,81 @@ def start_game():
 
     #Liste Plattformen
     list_platform = [
-    Platform(BLACK, -20, 570, 520, 500, texture=scaled_texture_floor1),
-    Platform(BLACK, 500, 570, 520, 500, texture=scaled_texture_floor1),
+    Platform(WHITE, -20, 570, 520, 500, texture=scaled_texture_floor1),
+    Platform(WHITE, 500, 570, 520, 500, texture=scaled_texture_floor1),
 
     Platform(WHITE, 640, 400, 200, 30, texture=scaled_image_platform),
     Platform(WHITE, 640, 10, 200, 30, texture=scaled_image_platform),
     Platform(WHITE, 100, -100, 200, 30, texture=scaled_image_platform),
-    Platform(WHITE, 730, -800, 200, 30, texture=scaled_image_platform),
     Platform(WHITE, 100, -1000, 200, 30, texture=scaled_image_platform),
     Platform(WHITE, 250, -1600, 200, 30, texture=scaled_image_platform),
     Platform(WHITE, 60, -570, 100, 15, texture=scaled_image_platform2),
+    Platform(WHITE, 550, -1770, 100, 15, texture=scaled_image_platform2),
+    Platform(WHITE, 750, -1970, 100, 15, texture=scaled_image_platform2),
+    Platform(WHITE, 500, -2170, 100, 15, texture=scaled_image_platform2),
+    Platform(WHITE, 270, -2170, 100, 15, texture=scaled_image_platform2),
+    Platform(WHITE, 70, -2170, 100, 15, texture=scaled_image_platform2),
+    Platform(WHITE, 300, -2570, 100, 15, texture=scaled_image_platform2),
 
     Platform(WHITE, 16, 203, 451, 47, texture=texture_left_beam),
     Platform(WHITE, 560, -309, 451, 47, texture=texture_right_beam),
     Platform(WHITE, 13,-396,460, 47, texture=scaled_left_beam),
+    Platform(WHITE,13,-2000,451,47,texture=texture_left_beam),
     Platform(WHITE,323,-767,120,50,texture=scaled_right_straight_short),
 
-    Platform(BLACK, 0, -30, 40, 700, texture=texture_left_wall),
-    Platform(BLACK, 0, -630, 40, 700, texture=texture_left_wall),
-    Platform(BLACK, 0, -1230, 40, 700, texture=texture_left_wall),
-    Platform(BLACK, 0, -1830, 40, 700, texture=texture_left_wall),
-    Platform(BLACK, 0, -2430, 40, 700, texture=texture_left_wall),
-    Platform(BLACK, 1000-53, -30, 40, 700, texture=texture_right_wall),
-    Platform(BLACK, 1000-53, -630, 40, 700, texture=texture_right_wall),
-    Platform(BLACK, 1000-53, -1230, 40, 700, texture=texture_right_wall),
-    Platform(BLACK, 1000 - 53, -1830, 40, 700, texture=texture_right_wall),
-    Platform(BLACK, 1000 - 53, -2430, 40, 700, texture=texture_right_wall),
+    Platform(WHITE, 0, -30, 40, 700, texture=texture_left_wall),
+    Platform(WHITE, 0, -630, 40, 700, texture=texture_left_wall),
+    Platform(WHITE, 0, -1230, 40, 700, texture=texture_left_wall),
+    Platform(WHITE, 1000-53, -30, 40, 700, texture=texture_right_wall),
+    Platform(WHITE, 1000-53, -630, 40, 700, texture=texture_right_wall),
+    Platform(WHITE, 1000-53, -1230, 40, 700, texture=texture_right_wall),
+    Platform(WHITE, 0, -30, 40, 700, texture=texture_left_wall),
+    Platform(WHITE, 0, -630, 40, 700, texture=texture_left_wall),
+    Platform(WHITE, 0, -1230, 40, 700, texture=texture_left_wall),
+    Platform(WHITE, 0, -1830, 40, 700, texture=texture_left_wall),
+    Platform(WHITE, 0, -2430, 40, 700, texture=texture_left_wall),
+    Platform(WHITE, 1000-53, -30, 40, 700, texture=texture_right_wall),
+    Platform(WHITE, 1000-53, -630, 40, 700, texture=texture_right_wall),
+    Platform(WHITE, 1000-53, -1230, 40, 700, texture=texture_right_wall),
+    Platform(WHITE, 1000 - 53, -1830, 40, 700, texture=texture_right_wall),
+    Platform(WHITE, 1000 - 53, -2430, 40, 700, texture=texture_right_wall),
 
-    Platform(BLACK,425 ,-717,50,324, texture=texture_stone_pole_short),
+    Platform(WHITE,-10,-4000,10,3000, texture=None),
+    Platform(WHITE,1000, -4000, 10, 3000, texture=None),
+
+    Platform(WHITE,425 ,-717,50,324, texture=texture_stone_pole_short),
+    Platform(WHITE,650,-2600,50,50,texture=scaled_slippery_middle)
+    #Slippery1
+    #Platform(WHITE,650,-2600,50,50,texture=scaled_slippery_middle),
+    #Platform(BLACK,595,-2544,160,2)
     ]
-
 
     #Liste Rutsche
     list_slopes = [
         Slope(RED, 442, -767, 60, "right", texture=scaled_slope_right),
+        #Slippery1
+        #Slope(RED, 595,-2599,55,"left",texture=scaled_slippery_left),
+        #Slope (RED, 700, -2599, 55,"right",texture=scaled_slippery_right),
     ]
     #Liste Gegner
-    list_enemy = [Enemy_Horizontal(BLUE, 200, 100, 75, 75, 4, texture=scaled_image_enemy1),
-                  Enemy_Horizontal(BLUE, 700, -700,75,75,4, texture=scaled_image_enemy1),
-                  Enemy_Vertical(BLUE, 200, 100, 75, 75, 4, texture=scaled_image_enemy1)
+    list_enemy = \
+        [Enemy_Horizontal(BLUE, 200, 100, 75, 75, 4,movrange=150, texture=scaled_image_enemy1),
+        Enemy_Horizontal(BLUE, 700, -700,75,75,4,movrange=180, texture=scaled_image_enemy1),
+        Enemy_Vertical(BLUE, 300, -2250,75,75,5,movrange=250,texture=scaled_image_enemy1),
                   ]
 
+    list_static_enemy = \
+        [Static_Enemy(BLUE, 60, -445, 200, 50, texture=scaled_spikes),
+         Static_Enemy(BLUE, 500, 530, 100, 50, texture=scaled_short_spikes),
 
+                      ]
     #Liste Coins
     origin_ruby_coins = [
         (RED, 723, -29, 30, 30, scaled_texture_ruby_coin),
         (RED,183, -136,30,30 ,scaled_texture_ruby_coin),
     ]
     origin_gold_coins = [
-        (YELLOW, 200, -440, 30, 30, scaled_texture_gold_coin)
+        (YELLOW, 370, -445, 30, 30, scaled_texture_gold_coin)
     ]
     #coin erstellen r
     def create_ruby_coins():
@@ -188,16 +223,17 @@ def start_game():
 
     list_powerups = [PowerUp(410, -200, 40, 40, texture=scaled_double_jump_icon),
                      PowerUp(670, -600, 40, 40, texture=scaled_double_jump_icon),
-                    PowerUp(400, -1200, 40, 40, texture=scaled_double_jump_icon),
+                     PowerUp(120, -2400, 40, 40, texture=scaled_double_jump_icon),
+                     PowerUp(400, -1200, 40, 40, texture=scaled_double_jump_icon),
                      PowerUp(650, -1470, 40, 40, texture=scaled_double_jump_icon),
     ]
 
     # Ziel erstellen
-    goal1 = Goal(WHITE, 700, -2380, 60, 80,texture=scaled_texture_trophy)
+    goal1 = Goal(WHITE, 700, -3380, 60, 80,texture=scaled_texture_trophy)
     # Deathzone erstellen
     deathzone1 = Deathzone(WHITE, -1000, 900, 20000, 20000)
     # Spieler erstellen
-    player1 = Player(RED, Cx - 25, 450, 50, 50, texture=scaled_image_player1)
+    player1 = Player(RED, Cx - 300, 500, 50, 50, texture=scaled_image_player1)
 
     # Hauptspielschleife
     gameactive = True
@@ -222,6 +258,9 @@ def start_game():
         for enemy in list_enemy:
             enemy.update()
             enemy.draw(screen, camera_offset_y)
+
+        for static_enemy in list_static_enemy:
+            static_enemy.draw(screen, camera_offset_y)
         # Plattformen zeichnen
         for platform in list_platform:
             platform.draw(screen, camera_offset_y)
@@ -285,6 +324,16 @@ def start_game():
                     pygame.mixer.Sound.set_volume(damage, 0.5)
                     pygame.mixer.Sound.play(damage)
 
+        for static_enemy in list_static_enemy:
+            if player1.rect.colliderect(static_enemy.rect):
+                if not invincible:
+                    invincible = True
+                    hitpoints -= 1
+                    hitmoment = pygame.time.get_ticks()
+                    damage = pygame.mixer.Sound(r"Sounds\damage.mp3")
+                    pygame.mixer.Sound.set_volume(damage, 0.5)
+                    pygame.mixer.Sound.play(damage)
+
         if invincible:
             player1.texture = scaled_image_player1_hit
             player1.f = ORANGE
@@ -307,7 +356,7 @@ def start_game():
         if player1.rect.colliderect(goal1.rect):
             if not reset_triggered:
                 reset_triggered = True  # Reset nur einmal auslösen
-                player1 = Player(RED, Cx - 25, 450, 50, 50, texture=scaled_image_player1)
+                player1 = Player(RED, Cx - 300, 500, 50, 50, texture=scaled_image_player1)
                 list_ruby_coins[:] = create_ruby_coins()
                 list_gold_coins[:] = create_gold_coins()
                 score = 0
@@ -337,7 +386,7 @@ def start_game():
             score = 0
             list_ruby_coins[:] = create_ruby_coins()
             list_gold_coins[:] = create_gold_coins()
-            player1 = Player(RED, Cx - 25, 450, 50, 50, texture=scaled_image_player1)
+            player1 = Player(RED, Cx - 300, 500, 50, 50, texture=scaled_image_player1)
 
         # Scoreanzeige zeichnen
         score_text = font.render('Score = ' + str(score), True, YELLOW)
@@ -373,20 +422,20 @@ def button(x, y, w, h, text, text_offset_x, text_offset_y, color):
 
         if click[0]:  # Linksklick gedrückt?
             pygame.time.delay(150)  # Kurze Verzögerung für bessere Button-Reaktion
-            if text == 'start':
+            if text == 'START':
                 game_running = True
                 start_game()
-            elif text == 'Resume':
+            elif text == 'RESUME':
                 game_running = True
                 return
-            elif text == 'Quit':
+            elif text == 'QUIT':
                 pygame.quit()
                 exit()
-            elif text == 'Back':
+            elif text == 'BACK':
                 menu()
             elif text == '...':
                 menu()
-            elif text == 'Resume':
+            elif text == 'RESUME':
                 start_game()
 
 
@@ -408,13 +457,12 @@ def menu():
         if game_running:  # Falls Resume gedrückt wurde, verlasse das Menü
             return
 
-        button(Cx - 100, 100, 200, 70, 'start' if not game_started else 'Resume', 40, 20, WHITE)
-        #button(Cx - 100, 100, 200, 70, 'Resume', 40, 20, WHITE)
+        button(Cx - 100, Cy-100, 200, 70, 'START' if not game_started else 'RESUME', 50, 20, WHITE)
+        #button(Cx - 100, 100, 200, 70, 'RESUME', 40, 20, WHITE)
         #button(Cx - 100, 225, 200, 70, 'Options', 40, 20, WHITE)
-        button(Cx - 100, 350, 200, 70, 'Quit', 50, 20, WHITE)
+        button(Cx - 100, 300, 200, 70, 'QUIT', 60, 20, WHITE)
 
         pygame.display.update()
-
 
 
 def options():
