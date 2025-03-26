@@ -43,10 +43,10 @@ class Player:
             self.rect.x += self.v[0]
         if keys[pygame.K_a] and self.on_right_slope == False:
             self.rect.x -= self.v[0]
-        if keys[pygame.K_w] and self.on_left_slope == False:
+        """if keys[pygame.K_w] and self.on_left_slope == False:
             self.rect.y -= self.v[1]
         if keys[pygame.K_s] and self.on_right_slope == False:
-            self.rect.y += self.v[1]
+            self.rect.y += self.v[1]"""
 
 
     def applyGravity(self):

@@ -50,6 +50,7 @@ def start_game():
 
     texture_flying_plattform = pygame.image.load(r"Texture/FlyingPlattform.png")
     scaled_image_platform = pygame.transform.scale(texture_flying_plattform, (200, 70))
+    scaled_image_platform2 = pygame.transform.scale(texture_flying_plattform, (100,35))
 
     texture_player1 = pygame.image.load(r"Texture\WorrierMain.png")
     scaled_image_player1 = pygame.transform.scale(texture_player1, (52, 52))
@@ -63,13 +64,22 @@ def start_game():
     texture_left_beam = pygame.image.load(r"Texture\BalkenLinkeWand.png")
     scaled_left_beam = pygame.transform.scale(texture_left_beam, (475, 47))
     texture_right_beam = pygame.image.load(r"Texture\BalkenRechteWand.png")
-    texture_right_short_straight_beam = pygame.image.load(r"Texture/BalkenGeradeRechts.png")
-    scaled_right_straight_short = pygame.transform.scale(texture_right_short_straight_beam, (120, 40))
 
     texture_left_wall = pygame.image.load(r"Texture\LinkeWand.png")
     texture_right_wall = pygame.image.load(r"Texture/RechteWand.png")
 
     texture_stone_pole_short = pygame.image.load(r"Texture/StonePoleShort.png")
+
+    texture_slope_right = pygame.image.load(r"Texture/RutscheRechts.png")
+    scaled_slope_right = pygame.transform.scale(texture_slope_right, (50, 50))
+    texture_slope_left = pygame.image.load(r"Texture/RutscheLinks.png")
+    scaled_slope_left = pygame.transform.scale(texture_slope_left, (50, 50))
+
+    texture_right_short_straight_beam = pygame.image.load(r"Texture/BalkenGeradeRechts.png")
+    scaled_right_straight_short = pygame.transform.scale(texture_right_short_straight_beam, (120, 50))
+
+    texture_slippery_plattform = pygame.image.load(r"Texture/SlipperyPlattformSkeleton.png")
+    scaled_slippery_plattform = pygame.transform.scale(texture_slippery_plattform, (146, 106))
 
     texture_ruby_coin = pygame.image.load (r"Texture\RubyCoin.png")
     scaled_texture_ruby_coin = pygame.transform.scale(texture_ruby_coin, (35, 30))
@@ -118,26 +128,33 @@ def start_game():
     Platform(WHITE, 640, 10, 200, 30, texture=scaled_image_platform),
     Platform(WHITE, 100, -100, 200, 30, texture=scaled_image_platform),
     Platform(WHITE, 730, -800, 200, 30, texture=scaled_image_platform),
+    Platform(WHITE, 100, -1000, 200, 30, texture=scaled_image_platform),
+    Platform(WHITE, 250, -1600, 200, 30, texture=scaled_image_platform),
+    Platform(WHITE, 60, -570, 100, 15, texture=scaled_image_platform2),
 
     Platform(WHITE, 16, 203, 451, 47, texture=texture_left_beam),
-    Platform(WHITE, 538, -309, 451, 47, texture=texture_right_beam),
+    Platform(WHITE, 560, -309, 451, 47, texture=texture_right_beam),
     Platform(WHITE, 13,-396,460, 47, texture=scaled_left_beam),
-    Platform(WHITE,340,-768,120,50,texture=scaled_right_straight_short),
+    Platform(WHITE,323,-767,120,50,texture=scaled_right_straight_short),
 
     Platform(BLACK, 0, -30, 40, 700, texture=texture_left_wall),
     Platform(BLACK, 0, -630, 40, 700, texture=texture_left_wall),
     Platform(BLACK, 0, -1230, 40, 700, texture=texture_left_wall),
+    Platform(BLACK, 0, -1830, 40, 700, texture=texture_left_wall),
+    Platform(BLACK, 0, -2430, 40, 700, texture=texture_left_wall),
     Platform(BLACK, 1000-53, -30, 40, 700, texture=texture_right_wall),
     Platform(BLACK, 1000-53, -630, 40, 700, texture=texture_right_wall),
     Platform(BLACK, 1000-53, -1230, 40, 700, texture=texture_right_wall),
+    Platform(BLACK, 1000 - 53, -1830, 40, 700, texture=texture_right_wall),
+    Platform(BLACK, 1000 - 53, -2430, 40, 700, texture=texture_right_wall),
 
-    Platform(BLACK,425 ,-717,70,324, texture=texture_stone_pole_short),
+    Platform(BLACK,425 ,-717,50,324, texture=texture_stone_pole_short),
     ]
 
-    #Liste Rutschen
+
+    #Liste Rutsche
     list_slopes = [
-        Slope(RED, 460, 209, 200, "right"),
-        Slope(RED, 400, 450, 150, "left")
+        Slope(RED, 442, -767, 60, "right", texture=scaled_slope_right),
     ]
     #Liste Gegner
     list_enemy = [Enemy_Horizontal(BLUE, 200, 100, 75, 75, 4, texture=scaled_image_enemy1),
@@ -171,7 +188,8 @@ def start_game():
 
     list_powerups = [PowerUp(410, -200, 40, 40, texture=scaled_double_jump_icon),
                      PowerUp(670, -600, 40, 40, texture=scaled_double_jump_icon),
-
+                    PowerUp(400, -1200, 40, 40, texture=scaled_double_jump_icon),
+                     PowerUp(650, -1470, 40, 40, texture=scaled_double_jump_icon),
     ]
 
     # Ziel erstellen
@@ -330,7 +348,7 @@ def start_game():
             list_hearts[i].draw(screen, 0)
 
         #menu button
-        button(900, 50, 40, 40, '...', 0, 0, (210,210,210))
+        button(900, 50, 40, 40, '...', 6, 0, (255,255,255))
 
         pygame.display.flip()
         clock.tick(60)
@@ -361,8 +379,6 @@ def button(x, y, w, h, text, text_offset_x, text_offset_y, color):
             elif text == 'Resume':
                 game_running = True
                 return
-            elif text == 'Options':
-                options()
             elif text == 'Quit':
                 pygame.quit()
                 exit()
@@ -370,6 +386,8 @@ def button(x, y, w, h, text, text_offset_x, text_offset_y, color):
                 menu()
             elif text == '...':
                 menu()
+            elif text == 'Resume':
+                start_game()
 
 
 def menu():
@@ -392,10 +410,11 @@ def menu():
 
         button(Cx - 100, 100, 200, 70, 'start' if not game_started else 'Resume', 40, 20, WHITE)
         #button(Cx - 100, 100, 200, 70, 'Resume', 40, 20, WHITE)
-        button(Cx - 100, 225, 200, 70, 'Options', 40, 20, WHITE)
+        #button(Cx - 100, 225, 200, 70, 'Options', 40, 20, WHITE)
         button(Cx - 100, 350, 200, 70, 'Quit', 50, 20, WHITE)
 
         pygame.display.update()
+
 
 
 def options():
