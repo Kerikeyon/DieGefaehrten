@@ -75,8 +75,8 @@ def start_game():
     texture_gold_coin = pygame.image.load (r"Texture\GoldCoin.png")
     scaled_texture_gold_coin = pygame.transform.scale(texture_gold_coin, (40, 40))
 
-    #pygame.mixer.music.load(r"Music\BackgroundMusic1.mp3")
-    #pygame.mixer.music.play(loops=-1, start=0.0, fade_ms=0)
+    pygame.mixer.music.load(r"Music\BackgroundMusic1.mp3")
+    pygame.mixer.music.play(loops=-1, start=0.0, fade_ms=0)
 
     texture_trophy = pygame.image.load(r"Texture\Trophy.png")
     scaled_texture_trophy = pygame.transform.scale(texture_trophy, (70, 70))
@@ -152,6 +152,7 @@ def start_game():
     origin_gold_coins = [
         (YELLOW, 200, -440, 30, 30, scaled_texture_gold_coin)
     ]
+    #coin erstellen r
     def create_ruby_coins():
         return [Coin(color, x, y, width, height, texture=texture)
                 for color, x, y, width, height, texture in origin_ruby_coins]
@@ -227,7 +228,7 @@ def start_game():
         player1.draw(screen, camera_offset_y)
 
         # Physik
-        player1.applyGravity()
+        #player1.applyGravity()
         player1.jump()
         # Plattform-Kollisionen
         player1.handle_collisions(list_platform)
@@ -241,14 +242,14 @@ def start_game():
         for i in range(len(list_ruby_coins)-1, -1, -1):
             if player1.rect.colliderect(list_ruby_coins[i].rect):
                 collect = pygame.mixer.Sound(r"Sounds\CoinCollect1.mp3")
-                pygame.mixer.Sound.set_volume(collect, 0.3)
+                pygame.mixer.Sound.set_volume(collect, 0.1)
                 pygame.mixer.Sound.play(collect)
                 del list_ruby_coins[i]
                 score += 1
         for i in range(len(list_gold_coins)-1, -1, -1):
             if player1.rect.colliderect(list_gold_coins[i].rect):
                 collect = pygame.mixer.Sound(r"Sounds\CoinCollect1.mp3")
-                pygame.mixer.Sound.set_volume(collect, 0.3)
+                pygame.mixer.Sound.set_volume(collect, 0.1)
                 pygame.mixer.Sound.play(collect)
                 del list_gold_coins[i]
                 score += 2
@@ -261,6 +262,7 @@ def start_game():
                     hitpoints -= 1
                     hitmoment = pygame.time.get_ticks()
                     damage = pygame.mixer.Sound(r"Sounds\damage.mp3")
+                    pygame.mixer.Sound.set_volume(damage, 0.5)
                     pygame.mixer.Sound.play(damage)
 
         if invincible:
@@ -281,6 +283,7 @@ def start_game():
 
         # Goal Kollision
         reset_triggered = False
+
         if player1.rect.colliderect(goal1.rect):
             if not reset_triggered:
                 reset_triggered = True  # Reset nur einmal auslösen
@@ -334,7 +337,7 @@ def start_game():
 
 # values after 'text' are for centralizing text
 def button(x, y, w, h, text, text_offset_x, text_offset_y, color):
-    global game_running, gameactive  # Hier gameactive als global deklarieren!
+    global game_running, gameactive
 
     mouse_pos = pygame.mouse.get_pos()
     click = pygame.mouse.get_pressed()
@@ -349,13 +352,12 @@ def button(x, y, w, h, text, text_offset_x, text_offset_y, color):
         screen.blit(button_text, (x + text_offset_x, y + text_offset_y))
 
         if click[0]:  # Linksklick gedrückt?
-            print (text)
             pygame.time.delay(150)  # Kurze Verzögerung für bessere Button-Reaktion
             if text == 'start':
                 game_running = True
                 start_game()
             elif text == 'Resume':
-                game_running = True  # Menü verlassen und ins Spiel zurückkehren
+                game_running = True
                 return
             elif text == 'Options':
                 options()

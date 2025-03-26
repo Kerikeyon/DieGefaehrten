@@ -42,19 +42,23 @@ class Player:
             self.jump_sound.play()
         if keys[pygame.K_d]:
             self.x += self.v[0]
+        if keys[pygame.K_w]:
+            self.y -= self.v[1]
+        if keys[pygame.K_s]:
+            self.y += self.v[1]
         if keys[pygame.K_a]:
             self.x -= self.v[0]
         self.rect.x = self.x
         self.rect.y = self.y
 
 
-    def applyGravity(self):
+    """def applyGravity(self):
         if not self.isjump:
             self.v[1] += self.gravity
         else:
             self.v[1] = -9
         self.y += self.v[1]
-        self.rect.y = self.y
+        self.rect.y = self.y"""
 
 
     def jump(self):
