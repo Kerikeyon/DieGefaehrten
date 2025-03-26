@@ -180,7 +180,6 @@ def start_game():
 
     list_powerups = [PowerUp(410, -200, 40, 40, texture=scaled_double_jump_icon),
                      PowerUp(670, -600, 40, 40, texture=scaled_double_jump_icon),
-
     ]
 
     # Ziel erstellen
@@ -370,8 +369,6 @@ def button(x, y, w, h, text, text_offset_x, text_offset_y, color):
             elif text == 'Resume':
                 game_running = True
                 return
-            elif text == 'Options':
-                options()
             elif text == 'Quit':
                 pygame.quit()
                 exit()
@@ -401,13 +398,13 @@ def menu():
 
         button(Cx - 100, 100, 200, 70, 'start' if not game_started else 'Resume', 40, 20, WHITE)
         #button(Cx - 100, 100, 200, 70, 'Resume', 40, 20, WHITE)
-        button(Cx - 100, 225, 200, 70, 'Options', 40, 20, WHITE)
+        #button(Cx - 100, 225, 200, 70, 'Options', 40, 20, WHITE)
         button(Cx - 100, 350, 200, 70, 'Quit', 50, 20, WHITE)
 
         pygame.display.update()
 
 
-def options():
+"""def options():
  while True:
 
     for event in pygame.event.get():
@@ -418,6 +415,6 @@ def options():
     button(Cx - 100, 100, 200, 70, 'Test 1', 37, 20, WHITE)
     button(Cx - 100, 225, 200, 70, 'Test 2', 60, 20, WHITE)
     button(Cx - 100, 350, 200, 70, 'Test 3', 40, 20, WHITE)
-    button(Cx - 100, 475, 200, 70, 'Back', 40, 20, WHITE)
+    button(Cx - 100, 475, 200, 70, 'Back', 40, 20, WHITE)"""
 
 menu()
