@@ -20,6 +20,8 @@ class Player:
         self.jump_sound = pygame.mixer.Sound(r"Sounds\jump1.mp3")
         self.on_left_slope = False
         self.on_right_slope = False
+        self.on_slope = False
+        self.slope_slide_speed = 0
 
     def draw(self, screen, camera_offset_y):
         if self.texture:
@@ -31,7 +33,7 @@ class Player:
     def KeyPress(self, ):
         keys = pygame.key.get_pressed()
         current_time = pygame.time.get_ticks()
-        if keys[pygame.K_SPACE] and not self.isjump and (current_time - self.nextjump) >= self.jump_cooldown and self.isOnPlatform <2:
+        if keys[pygame.K_SPACE] and not self.isjump and (current_time - self.nextjump) >= self.jump_cooldown and self.isOnPlatform <1:
             self.isOnPlatform += 1
             self.isjump = True
             self.jumpCount = 10
@@ -41,14 +43,18 @@ class Player:
             self.rect.x += self.v[0]
         if keys[pygame.K_a] and self.on_right_slope == False:
             self.rect.x -= self.v[0]
+        if keys[pygame.K_w] and self.on_left_slope == False:
+            self.rect.y -= self.v[1]
+        if keys[pygame.K_s] and self.on_right_slope == False:
+            self.rect.y += self.v[1]
 
 
-    def applyGravity(self):
+    """def applyGravity(self):
         if not self.isjump:
             self.v[1] += self.gravity
         else:
             self.v[1] = -9
-        self.rect.y += self.v[1]
+        self.rect.y += self.v[1]"""
 
 
     def jump(self):
