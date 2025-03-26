@@ -346,7 +346,7 @@ def start_game():
             list_hearts[i].draw(screen, 0)
 
         #menu button
-        button(900, 50, 40, 40, '...', 0, 0, (210,210,210))
+        button(900, 50, 40, 40, '...', 6, 0, (255,255,255))
 
         pygame.display.flip()
         clock.tick(60)
@@ -384,6 +384,8 @@ def button(x, y, w, h, text, text_offset_x, text_offset_y, color):
                 menu()
             elif text == '...':
                 menu()
+            elif text == 'Resume':
+                start_game()
 
 
 def menu():
@@ -412,7 +414,8 @@ def menu():
         pygame.display.update()
 
 
-"""def options():
+
+def options():
  while True:
 
     for event in pygame.event.get():
@@ -423,6 +426,6 @@ def menu():
     button(Cx - 100, 100, 200, 70, 'Test 1', 37, 20, WHITE)
     button(Cx - 100, 225, 200, 70, 'Test 2', 60, 20, WHITE)
     button(Cx - 100, 350, 200, 70, 'Test 3', 40, 20, WHITE)
-    button(Cx - 100, 475, 200, 70, 'Back', 40, 20, WHITE)"""
+    button(Cx - 100, 475, 200, 70, 'Back', 40, 20, WHITE)
 
 menu()
