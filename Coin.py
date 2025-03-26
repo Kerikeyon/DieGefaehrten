@@ -15,5 +15,5 @@ class Coin:
             screen.blit(self.texture, (self.x, self.y - camera_offset_y))
         else:
             pygame.draw.rect(screen, self.f, (self.x, self.y - camera_offset_y, self.w, self.h))
- # test
+
  

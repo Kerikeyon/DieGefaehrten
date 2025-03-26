@@ -75,30 +75,31 @@ class Player:
 
 
     def is_on_diagonal_slope(self, slope):
-        
-        p1, p2, p3 = slope.points  
 
+        p1, p2, p3 = slope.points
+
+        # Bestimme die linke und rechte Grenze der Schräge
         min_x = min(p1[0], p3[0])
         max_x = max(p1[0], p3[0])
         max_y = max(p1[1], p3[1])
         min_y = min(p1[1], p3[1])
 
         height_slope = self.rect.x + min_y - min_x if slope.direction == "right" else -self.rect.right + max_y + min_x
-        
+
         if self.rect.right < min_x or self.rect.left > max_x:
             return False
 
         if slope.direction == "right":
-            height_slope_top = self.rect.x + min_y - min_x 
-            height_slope_bottom = self.rect.right + min_y - min_x 
-            
+            height_slope_top = self.rect.x + min_y - min_x
+            height_slope_bottom = self.rect.right + min_y - min_x
+
             if height_slope_top <= self.rect.bottom and height_slope_bottom >= self.rect.top and self.rect.left >= min_x:
                 return True
 
         if slope.direction == "left":
-            height_slope_bottom = -self.rect.x + max_y + min_x 
-            height_slope_top = -self.rect.right + max_y + min_x 
-            
+            height_slope_bottom = -self.rect.x + max_y + min_x
+            height_slope_top = -self.rect.right + max_y + min_x
+
             if height_slope_top <= self.rect.bottom and height_slope_bottom >= self.rect.top and self.rect.right <= max_x:
                 return True
 
@@ -125,8 +126,8 @@ class Player:
         min_x = min(p1[0], p3[0])
         max_x = max(p1[0], p3[0])
         min_y = min(p1[1], p3[1])
-        max_y = max(p1[1], p3[1])                
-        
+        max_y = max(p1[1], p3[1])
+
         if slope.direction == "left" and self.rect.left <= max_x and self.rect.right >= max_x and self.rect.bottom <= max_y and self.rect.top >= min_y:
             return True
         if slope.direction == "right" and self.rect.left <= min_x and self.rect.right >= min_x and self.rect.bottom <= max_y and self.rect.top >= min_y:
@@ -154,7 +155,7 @@ class Player:
                     self.rect.x = platform.rect.x + platform.rect.w
 
         for slope in list_slopes:
-            
+
             p1, p2, p3 = slope.points  # Eckpunkte der Schräge
 
              # Bestimme die linke und rechte Grenze der Schräge
@@ -167,8 +168,8 @@ class Player:
 
 
             if self.is_on_horizontal_slope(slope) and self.v[1] < 0:
-                self.rect.top = max_y 
-           
+                self.rect.top = max_y
+
             #self.is_on_horizontal_slope(slope) #temp
             elif self.is_on_horizontal_slope(slope) and self.is_on_diagonal_slope(slope):
                 if slope.direction == "left":
@@ -185,7 +186,7 @@ class Player:
                     self.rect.x -= 8
                     self.rect.bottom = height_slope + 1
                 elif slope.direction == "right":
-                    self.rect.x += 8 
+                    self.rect.x += 8
                     self.rect.bottom = height_slope
 
             elif self.is_on_vertical_slope(slope):

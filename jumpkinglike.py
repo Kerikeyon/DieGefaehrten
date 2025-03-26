@@ -33,6 +33,7 @@ from Slope import Slope
 from Deathzone import Deathzone
 from PowerUp import PowerUp
 from Static_Enemy import Static_Enemy
+from WinScreen import WinScreen
 
 def start_game():
 
@@ -62,7 +63,7 @@ def start_game():
 
     texture_player1 = pygame.image.load(r"Texture\WorrierMain.png")
     scaled_image_player1 = pygame.transform.scale(texture_player1, (52, 52))
-
+    texture_WinScreen = pygame.image.load(r"Texture\WinScreen.jpg")
     texture_moving_enemy = pygame.image.load (r"Texture/MovingEnemy.png")
     scaled_image_enemy1 = pygame.transform.scale(texture_moving_enemy,(75,75))
     texture_spikes = pygame.image.load(r"Texture/Spikes.png")
@@ -111,6 +112,7 @@ def start_game():
     bg3 = pygame.image.load(r"Texture\LandscapeBackground.png")
     bg2 = pygame.image.load(r"Texture\MoonBackground.png")
 
+
     scaled_bg1 = pygame.transform.scale(bg1, (screen_width, screen_height))
     scaled_bg2 = pygame.transform.scale(bg2, (screen_width, screen_height))
     scaled_bg3 = pygame.transform.scale(bg3, (screen_width, screen_height))
@@ -132,6 +134,8 @@ def start_game():
     list_platform = [
     Platform(WHITE, -20, 570, 520, 500, texture=scaled_texture_floor1),
     Platform(WHITE, 500, 570, 520, 500, texture=scaled_texture_floor1),
+    Platform(WHITE, -20, 19980, 520, 500, texture=scaled_texture_floor1),
+    Platform(WHITE, 500, 19980, 520, 500, texture=scaled_texture_floor1),
 
     Platform(WHITE, 640, 400, 200, 30, texture=scaled_image_platform),
     Platform(WHITE, 640, 10, 200, 30, texture=scaled_image_platform),
@@ -178,7 +182,7 @@ def start_game():
     #Platform(WHITE,650,-2600,50,50,texture=scaled_slippery_middle),
     #Platform(BLACK,595,-2544,160,2)
     ]
-
+    winscreen = WinScreen(Cx-1,20000, 500, 500, texture_WinScreen)
     #Liste Rutsche
     list_slopes = [
         Slope(RED, 442, -767, 60, "right", texture=scaled_slope_right),
@@ -285,6 +289,7 @@ def start_game():
         deathzone1.draw(screen, camera_offset_y)
         # Spieler zeichnen
         player1.draw(screen, camera_offset_y)
+        winscreen.draw(screen, camera_offset_y)
 
         # Physik
         player1.applyGravity()
@@ -351,24 +356,46 @@ def start_game():
                 player1.texture = scaled_image_player1
 
         # Goal Kollision
-        reset_triggered = False
 
+        # In der Goal-Kollisionsprüfung:
         if player1.rect.colliderect(goal1.rect):
-            if not reset_triggered:
-                reset_triggered = True  # Reset nur einmal auslösen
-                player1 = Player(RED, Cx - 300, 500, 50, 50, texture=scaled_image_player1)
-                list_ruby_coins[:] = create_ruby_coins()
-                list_gold_coins[:] = create_gold_coins()
-                score = 0
-                invincible = False
-                hitpoints = 3
-                victory = pygame.mixer.Sound(r"Sounds\victory1.mp3")
-                pygame.mixer.Sound.play(victory)
-        else:
-            reset_triggered = False
+            player1.rect.y = 20000 - player1.rect.height  # Teleportiere den Spieler direkt über den WinScreen
+            player1.rect.x = Cx - 250  # Zentriere den Spieler horizontal
+            list_ruby_coins[:] = create_ruby_coins()
+            list_gold_coins[:] = create_gold_coins()
+            score = 0
+            invincible = False
+            hitpoints = 3
+            victory = pygame.mixer.Sound(r"Sounds\victory1.mp3")
+            pygame.mixer.Sound.play(victory)
+
+            # Zeige den WinScreen an
+            win_screen_active = True
+            while win_screen_active:
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        pygame.quit()
+                        exit()
+                    elif event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_ESCAPE or event.key == pygame.K_RETURN:
+                            win_screen_active = False
+                            menu()  # Zurück zum Hauptmenü
+
+                # Zeichne den WinScreen (ohne Kamera-Offset)
+                screen.fill(BLACK)
+                winscreen.draw(screen, 0)  # Offset auf 0, da wir den Screen direkt anzeigen wollen
+
+                # Optional: Text hinzufügen
+                win_text = font.render('Congratulations! You won!', True, WHITE)
+                screen.blit(win_text, (Cx - win_text.get_width() // 2, 100))
+                instruction_text = font.render('Press ESC or ENTER to continue', True, WHITE)
+                screen.blit(instruction_text, (Cx - instruction_text.get_width() // 2, 150))
+
+                pygame.display.flip()
+                clock.tick(60)
 
         # Deathzone Kollision
-        if player1.rect.colliderect(deathzone1.rect):
+        """if player1.rect.colliderect(deathzone1.rect):
             if not reset_triggered:
                 reset_triggered = True  # Reset nur einmal auslösen
                 player1 = Player(RED, Cx - 25, 450, 50, 50, texture=scaled_image_player1)
@@ -378,7 +405,7 @@ def start_game():
                 invincible = False
                 hitpoints = 3
         else:
-            reset_triggered = False
+            reset_triggered = False"""
 
         # Spieler-Reset
         if hitpoints <= 0:
@@ -463,6 +490,7 @@ def menu():
         button(Cx - 100, 300, 200, 70, 'QUIT', 60, 20, WHITE)
 
         pygame.display.update()
+
 
 
 def options():
