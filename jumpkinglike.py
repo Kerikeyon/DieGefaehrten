@@ -22,7 +22,8 @@ BLUE = (0, 0, 255)
 font = pygame.font.Font('freesansbold.ttf', 32)
 
 # Klassen
-from Enemy import Enemy
+from Enemy_Horizontal import Enemy_Horizontal
+from Enemy_Vertical import Enemy_Vertical
 from Player import Player
 from Coin import Coin
 from Goal import Goal
@@ -135,11 +136,13 @@ def start_game():
 
     #Liste Rutschen
     list_slopes = [
-        Slope(RED, 65, 209, 190, "right")
+        Slope(RED, 460, 209, 200, "right"),
+        Slope(RED, 400, 450, 150, "left")
     ]
     #Liste Gegner
-    list_enemy = [Enemy(BLUE, 200, 100, 75, 75, 4, texture=scaled_image_enemy1),
-                  Enemy(BLUE, 700, -700,75,75,4, texture=scaled_image_enemy1)
+    list_enemy = [Enemy_Horizontal(BLUE, 200, 100, 75, 75, 4, texture=scaled_image_enemy1),
+                  Enemy_Horizontal(BLUE, 700, -700,75,75,4, texture=scaled_image_enemy1),
+                  Enemy_Vertical(BLUE, 200, 100, 75, 75, 4, texture=scaled_image_enemy1)
                   ]
 
 
@@ -227,7 +230,7 @@ def start_game():
         player1.draw(screen, camera_offset_y)
 
         # Physik
-        #player1.applyGravity()
+        player1.applyGravity()
         player1.jump()
         # Plattform-Kollisionen
         player1.handle_collisions(list_platform, list_slopes)

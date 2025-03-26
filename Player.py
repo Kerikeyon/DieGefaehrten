@@ -49,12 +49,12 @@ class Player:
             self.rect.y += self.v[1]
 
 
-    """def applyGravity(self):
+    def applyGravity(self):
         if not self.isjump:
             self.v[1] += self.gravity
         else:
             self.v[1] = -9
-        self.rect.y += self.v[1]"""
+        self.rect.y += self.v[1]
 
 
     def jump(self):
@@ -75,37 +75,32 @@ class Player:
 
 
     def is_on_diagonal_slope(self, slope):
-        """Überprüft, ob der Spieler sich tatsächlich auf einer Schräge befindet"""
-        p1, p2, p3 = slope.points  # Eckpunkte der Schräge
+        
+        p1, p2, p3 = slope.points  
 
-        # Bestimme die linke und rechte Grenze der Schräge
         min_x = min(p1[0], p3[0])
         max_x = max(p1[0], p3[0])
+        max_y = max(p1[1], p3[1])
         min_y = min(p1[1], p3[1])
 
-        # Falls der Spieler außerhalb der Schräge ist, sofort False zurückgeben
-        if not (min_x <= self.rect.centerx <= max_x):
+        height_slope = self.rect.x + min_y - min_x if slope.direction == "right" else -self.rect.right + max_y + min_x
+        
+        if self.rect.right < min_x or self.rect.left > max_x:
             return False
 
-        # Berechnung der Steigung der Schräge
-        dx = p3[0] - p1[0]
-        dy = p3[1] - p1[1]
+        if slope.direction == "right":
+            height_slope_top = self.rect.x + min_y - min_x 
+            height_slope_bottom = self.rect.right + min_y - min_x 
+            
+            if height_slope_top <= self.rect.bottom and height_slope_bottom >= self.rect.top and self.rect.left >= min_x:
+                return True
 
-        if dx == 0:
-            return False  # Falls die Schräge vertikal wäre (was sie nicht sein sollte)
-
-        m = dy / dx  # Steigung berechnen
-        b = p1[1] - (m * p1[0])  # Achsenabschnitt berechnen
-
-        # Die berechnete Y-Position für die Schräge an der X-Position des Spielers
-        expected_y = (m * self.rect.centerx) + b
-
-        # Kollisionsprüfung mit `pygame.Rect.clipline()`
-        collision = self.rect.clipline((p1[0], p1[1]), (p3[0], p3[1]))
-
-        if collision:
-            self.rect.y = expected_y - self.rect.height # Spieler auf Schräge setzen
-            return True
+        if slope.direction == "left":
+            height_slope_bottom = -self.rect.x + max_y + min_x 
+            height_slope_top = -self.rect.right + max_y + min_x 
+            
+            if height_slope_top <= self.rect.bottom and height_slope_bottom >= self.rect.top and self.rect.right <= max_x:
+                return True
 
         return False
 
@@ -121,7 +116,22 @@ class Player:
         if self.rect.top <= max_y <= self.rect.bottom and self.rect.right >= min_x and self.rect.left <= max_x:
             return True
         return False
-         
+
+    def is_on_vertical_slope(self, slope):
+
+        p1, p2, p3 = slope.points  # Eckpunkte der Schräge
+
+        # Bestimme die linke und rechte Grenze der Schräge
+        min_x = min(p1[0], p3[0])
+        max_x = max(p1[0], p3[0])
+        min_y = min(p1[1], p3[1])
+        max_y = max(p1[1], p3[1])                
+        
+        if slope.direction == "left" and self.rect.left <= max_x and self.rect.right >= max_x and self.rect.bottom <= max_y and self.rect.top >= min_y:
+            return True
+        if slope.direction == "right" and self.rect.left <= min_x and self.rect.right >= min_x and self.rect.bottom <= max_y and self.rect.top >= min_y:
+            return True
+        return False
 
     def handle_collisions(self, list_platform, list_slopes):
         for platform in list_platform:
@@ -144,40 +154,45 @@ class Player:
                     self.rect.x = platform.rect.x + platform.rect.w
 
         for slope in list_slopes:
-
+            
             p1, p2, p3 = slope.points  # Eckpunkte der Schräge
 
              # Bestimme die linke und rechte Grenze der Schräge
             min_x = min(p1[0], p3[0])
             max_x = max(p1[0], p3[0])
-            
+            max_y = max(p1[1], p3[1])
+            min_y = min(p1[1], p3[1])
+
+            height_slope = self.rect.x + min_y - min_x if slope.direction == "right" else -self.rect.right + max_y + min_x
+
+
+            if self.is_on_horizontal_slope(slope) and self.v[1] < 0:
+                self.rect.top = max_y 
+           
             #self.is_on_horizontal_slope(slope) #temp
-            if self.is_on_horizontal_slope(slope):
+            elif self.is_on_horizontal_slope(slope) and self.is_on_diagonal_slope(slope):
                 if slope.direction == "left":
                     self.rect.right = min_x
                 if slope.direction == "right":
                     self.rect.left = max_x  
 
+            elif self.is_on_diagonal_slope(slope) and self.is_on_vertical_slope(slope):
+                self.rect.bottom = min_y
 
-            if self.is_on_diagonal_slope(slope):
-                self.v[1] = 6
+            elif self.is_on_diagonal_slope(slope) and not self.is_on_vertical_slope(slope):
+                self.v[1] = 8
                 if slope.direction == "left":
-                    self.rect.x -= 6 
+                    self.rect.x -= 8
+                    self.rect.bottom = height_slope + 1
                 elif slope.direction == "right":
-                    self.rect.x += 6 
+                    self.rect.x += 8 
+                    self.rect.bottom = height_slope
 
-            if self.is_on_horizontal_slope(slope) or self.is_on_diagonal_slope(slope):
-                self.hitslope = pygame.time.get_ticks()
+            elif self.is_on_vertical_slope(slope):
                 if slope.direction == "left":
-                    self.on_left_slope = True
+                    self.rect.left = max_x
                 if slope.direction == "right":
-                    self.on_right_slope = True
-                    
-            if self.on_left_slope or self.on_right_slope:
-                current_time = pygame.time.get_ticks()
-                elapsed_time_after_slope = current_time - self.hitslope
-                if elapsed_time_after_slope >= 1:
-                    self.on_left_slope = False
-                    self.on_right_slope = False
+                    self.rect.right = min_x
+
             
                   

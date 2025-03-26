@@ -1,6 +1,6 @@
 #enemy class
 import pygame
-class Enemy:
+class Enemy_Horizontal:
     def __init__(self, color, x, y, width, height, speed = 3, movrange = 150, texture = None):
         self.f = color
         self.x = x
