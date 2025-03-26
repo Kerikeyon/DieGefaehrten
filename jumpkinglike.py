@@ -6,7 +6,7 @@ clock = pygame.time.Clock()
 screen = pygame.display.set_mode((1000, 600))
 clock = pygame.time.Clock()
 screen_width, screen_height = screen.get_size()
-Cx, Cy = screen_width / 2, screen_height / 2#hi
+Cx, Cy = screen_width / 2, screen_height / 2
 keys = pygame.key.get_pressed()
 
 # Farben
@@ -257,7 +257,7 @@ def start_game():
             player1 = Player(RED, Cx - 25, 450, 50, 50, texture=scaled_image_Player1)
 
         # Scoreanzeige zeichnen
-        score_text = font.render('Score = ' + str(score), True, BLACK)
+        score_text = font.render('Score = ' + str(score), True, WHITE)
         screen.blit(score_text, (37, 65))
 
 
@@ -265,7 +265,7 @@ def start_game():
             list_hearts[i].draw(screen, 0)
         
         #menu button
-        button(900, 50, 40, 40, '...', 0, 0, (210,210,210))
+        button(900, 50, 40, 40, '...', 6, 0, (255,255,255))
 
         pygame.display.flip()
         clock.tick(60)
@@ -295,33 +295,45 @@ def button(x, y, w, h, text, text_offset_x, text_offset_y, color):
             elif text == 'Back':
                 menu()
             elif text == '...':
-                menu()
+                pause()
+            elif text == 'Resume':
+                start_game()
 
 def menu():
  
- while True:
+    while True:
 
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-           pygame.quit()
-    pygame.display.update()
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+        pygame.display.update()
 
-    screen.fill(BLACK)
-    button(Cx - 100, 100, 200, 70, 'Start', 50, 20, WHITE)
-    button(Cx - 100, 225, 200, 70, 'Options', 40, 20, WHITE)
-    button(Cx - 100, 350, 200, 70, 'Quit', 50, 20, WHITE)
+        screen.fill(BLACK)
+        button(Cx - 100, 100, 200, 70, 'Start', 63, 20, WHITE)
+        button(Cx - 100, 225, 200, 70, 'Options', 35, 20, WHITE)
+        button(Cx - 100, 350, 200, 70, 'Quit', 65, 20, WHITE)
  
 def options():
- while True:
+    while True:
 
-    for event in pygame.event.get():
-       if event.type == pygame.QUIT:
-           pygame.quit()
-    pygame.display.update()
-    screen.fill(BLACK)
-    button(Cx - 100, 100, 200, 70, 'Test 1', 37, 20, WHITE)
-    button(Cx - 100, 225, 200, 70, 'Test 2', 60, 20, WHITE)
-    button(Cx - 100, 350, 200, 70, 'Test 3', 40, 20, WHITE)
-    button(Cx - 100, 475, 200, 70, 'Back', 40, 20, WHITE)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+        pygame.display.update()
+        screen.fill(BLACK)
+        button(Cx - 100, 100, 200, 70, 'Test 1', 54, 20, WHITE)
+        button(Cx - 100, 225, 200, 70, 'Test 2', 54, 20, WHITE)
+        button(Cx - 100, 350, 200, 70, 'Test 3', 54, 20, WHITE)
+        button(Cx - 100, 475, 200, 70, 'Back', 63, 20, WHITE)
+
+def pause():
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+        pygame.display.update()
+        screen.fill(BLACK)
+        button(Cx - 100, screen_height/2 - 125, 200, 70, 'Resume', 35, 20, WHITE)
+        button(Cx - 100,  300, 200, 70, 'Options', 35, 20, WHITE)
 
 menu()
