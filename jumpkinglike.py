@@ -305,11 +305,27 @@ def start_game():
         (RED, 457, -3150, 30, 30, scaled_texture_ruby_coin),
         (RED, 457, -3400, 30, 30, scaled_texture_ruby_coin),
 
+        (RED, 300, 500, 30, 30, scaled_texture_ruby_coin),
+        (RED, 400, 500, 30, 30, scaled_texture_ruby_coin),
+        (RED, 500, 400, 30, 30, scaled_texture_ruby_coin),
+        (RED, 700, 360, 30, 30, scaled_texture_ruby_coin),
+        (RED, 400, 150, 30, 30, scaled_texture_ruby_coin),
+        (RED, 850, -370, 30, 30, scaled_texture_ruby_coin),
+        (RED, 380, -820, 30, 30, scaled_texture_ruby_coin),
+        (RED, 183, -1040, 30, 30, scaled_texture_ruby_coin),
+        (RED, 335, -1630, 30, 30, scaled_texture_ruby_coin),
+        (RED, 580, -1820, 30, 30, scaled_texture_ruby_coin),
+        (RED, 530, -2220, 30, 30, scaled_texture_ruby_coin),
+        (RED, 300, -2220, 30, 30, scaled_texture_ruby_coin),
     ]
     origin_gold_coins = [
         (YELLOW, 350, -445, 30, 30, scaled_texture_gold_coin),
         (YELLOW,145,-3050,30,30,scaled_texture_gold_coin),
         (YELLOW, 747, -5020, 30, 30, scaled_texture_gold_coin)
+        (YELLOW, 183, -136, 30, 30, scaled_texture_gold_coin),
+        (YELLOW, 145, -3050, 30, 30, scaled_texture_gold_coin),
+        (YELLOW, 150, -1400, 30, 30, scaled_texture_gold_coin),
+        (YELLOW, 250, -2000, 30, 30, scaled_texture_gold_coin),
     ]
     #coin erstellen r
     def create_ruby_coins():
