@@ -237,7 +237,7 @@ def start_game():
         [Enemy_Horizontal(BLUE, 200, 100, 75, 75, 4,movrange=150, texture=scaled_horizontal_enemy),
         Enemy_Horizontal(BLUE, 700, -700,75,75,4,movrange=180, texture=scaled_horizontal_enemy),
         Enemy_Horizontal(BLUE, 400, -2250,75,75,5,movrange=150,texture=scaled_horizontal_enemy),
-        Enemy_Horizontal(BLUE, 600, -1900,75,75,5,movrange=150,texture=scaled_horizontal_enemy),
+        Enemy_Horizontal(BLUE, 600, -1900,75,75,4,movrange=150,texture=scaled_horizontal_enemy),
 
         Enemy_Vertical(BLUE,335, -3300, 75,75,10,movrange=250, texture=scaled_vertical_enemy),
         Enemy_Vertical(BLUE,535, -3300,75,75,10,movrange=250,texture=scaled_vertical_enemy),
@@ -296,11 +296,18 @@ def start_game():
     #Liste Coins
     origin_ruby_coins = [
         (RED, 723, -29, 30, 30, scaled_texture_ruby_coin),
-        (RED,183, -136,30,30 ,scaled_texture_ruby_coin),
+        (RED, 183, -136, 30, 30, scaled_texture_ruby_coin),
+        (RED, 860, -350, 30, 30, scaled_texture_ruby_coin),
+        (RED, 330, -2610, 30, 30, scaled_texture_ruby_coin),
+        (RED, 655, -2640, 30, 30, scaled_texture_ruby_coin),
+        (RED, 856, -2835, 30, 30, scaled_texture_ruby_coin),
+        (RED, 658, -2936, 30, 30, scaled_texture_ruby_coin),
+        (RED, 457, -3150, 30, 30, scaled_texture_ruby_coin),
+        (RED, 457, -3400, 30, 30, scaled_texture_ruby_coin),
+
     ]
     origin_gold_coins = [
         (YELLOW, 350, -445, 30, 30, scaled_texture_gold_coin),
-        (YELLOW, 850, -370,30,30,scaled_texture_gold_coin),
         (YELLOW,145,-3050,30,30,scaled_texture_gold_coin),
         (YELLOW, 850, -370,30,30,scaled_texture_gold_coin) ,
         (YELLOW, 747, -5020, 30, 30, scaled_texture_gold_coin)
