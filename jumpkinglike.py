@@ -55,6 +55,7 @@ def start_game():
     scaled_image_platform2 = pygame.transform.scale(texture_flying_plattform, (100,35))
     texture_brick_block = pygame.image.load(r"Texture/BrickBlock.png")
     scaled_brick_block = pygame.transform.scale(texture_brick_block, (50, 50))
+    scaled_brick_block_small = pygame.transform.scale(texture_brick_block, (15, 25))
 
     texture_slippery_middle = pygame.image.load(r"Texture/SlipperyMitte.png")
     scaled_slippery_middle = pygame.transform.scale(texture_slippery_middle, (50, 88))
@@ -99,6 +100,7 @@ def start_game():
     texture_slope_right = pygame.image.load(r"Texture/RutscheRechts.png")
     scaled_slope_right = pygame.transform.scale(texture_slope_right, (50, 50))
     scaled_slope_right2 = pygame.transform.scale(texture_slope_right, (35, 35))
+    scaled_slope_right3 = pygame.transform.scale(texture_slope_right, (100, 100))
     texture_slope_left = pygame.image.load(r"Texture/RutscheLinks.png")
     scaled_slope_left = pygame.transform.scale(texture_slope_left, (50, 50))
     scaled_slope_left2 = pygame.transform.scale(texture_slope_left, (35, 35))
@@ -173,6 +175,7 @@ def start_game():
     Platform(WHITE, 850, -2800, 50, 50, texture=scaled_slippery_middle),
     Platform(WHITE, 650, -2900, 50, 50, texture=scaled_slippery_middle),
     Platform(WHITE, 450, -3000, 50, 50, texture=scaled_slippery_middle),
+    Platform(WHITE,140,-3000, 50, 50, texture=scaled_slippery_middle),
 
     Platform(WHITE, 70, -3860,50,50, texture=scaled_brick_block),
     Platform(WHITE, 100, -4106, 50, 50, texture=scaled_brick_block),
@@ -212,12 +215,18 @@ def start_game():
 
     Platform(WHITE, 537, -1101, 451, 47, texture=texture_right_beam),
     Platform(WHITE,425 ,-717,50,324, texture=texture_stone_pole_short),
+
+    Platform(WHITE, 760, -4975, 15, 25, texture=scaled_brick_block_small),
+    Platform(WHITE, 760, -4950, 15, 25, texture=scaled_brick_block_small),
+    Platform(WHITE, 760, -4925, 15, 25, texture=scaled_brick_block_small),
+    Platform(WHITE, 760, -4900, 15, 25, texture=scaled_brick_block_small)
     ]
     winscreen = WinScreen(Cx-1,20000,500,500,texture_WinScreen)
 
     #Liste Rutschen
     list_slopes = [
         Slope(RED, 442, -767, 60, "right", texture=scaled_slope_right),
+        Slope(RED, 775, -4975, 100, "right", texture=scaled_slope_right3)
         #Slope(RED,0,-2463,35,"right", texture=scaled_slope_right2),
         #Slope(RED,965,-2463,35,"left",texture=scaled_slope_left2)
         #Slippery1
@@ -229,7 +238,7 @@ def start_game():
         [Enemy_Horizontal(BLUE, 200, 100, 75, 75, 4,movrange=150, texture=scaled_horizontal_enemy),
         Enemy_Horizontal(BLUE, 700, -700,75,75,4,movrange=180, texture=scaled_horizontal_enemy),
         Enemy_Horizontal(BLUE, 400, -2250,75,75,5,movrange=150,texture=scaled_horizontal_enemy),
-        Enemy_Horizontal(BLUE, 600, -1900,75,75,5,movrange=150,texture=scaled_horizontal_enemy),
+        Enemy_Horizontal(BLUE, 600, -1900,75,75,4,movrange=150,texture=scaled_horizontal_enemy),
 
         Enemy_Vertical(BLUE,335, -3300, 75,75,10,movrange=250, texture=scaled_vertical_enemy),
         Enemy_Vertical(BLUE,535, -3300,75,75,10,movrange=250,texture=scaled_vertical_enemy),
@@ -288,7 +297,27 @@ def start_game():
     #Liste Coins
     origin_ruby_coins = [
         (RED, 723, -29, 30, 30, scaled_texture_ruby_coin),
-        (RED,183, -136,30,30 ,scaled_texture_ruby_coin),
+        (RED, 183, -136, 30, 30, scaled_texture_ruby_coin),
+        (RED, 860, -350, 30, 30, scaled_texture_ruby_coin),
+        (RED, 330, -2610, 30, 30, scaled_texture_ruby_coin),
+        (RED, 655, -2640, 30, 30, scaled_texture_ruby_coin),
+        (RED, 856, -2835, 30, 30, scaled_texture_ruby_coin),
+        (RED, 658, -2936, 30, 30, scaled_texture_ruby_coin),
+        (RED, 457, -3150, 30, 30, scaled_texture_ruby_coin),
+        (RED, 457, -3400, 30, 30, scaled_texture_ruby_coin),
+
+        (RED, 300, 500, 30, 30, scaled_texture_ruby_coin),
+        (RED, 400, 500, 30, 30, scaled_texture_ruby_coin),
+        (RED, 500, 400, 30, 30, scaled_texture_ruby_coin),
+        (RED, 700, 360, 30, 30, scaled_texture_ruby_coin),
+        (RED, 400, 150, 30, 30, scaled_texture_ruby_coin),
+        #(RED, 850, -370, 30, 30, scaled_texture_ruby_coin),
+        (RED, 380, -820, 30, 30, scaled_texture_ruby_coin),
+        (RED, 183, -1040, 30, 30, scaled_texture_ruby_coin),
+        (RED, 335, -1630, 30, 30, scaled_texture_ruby_coin),
+        (RED, 580, -1820, 30, 30, scaled_texture_ruby_coin),
+        (RED, 530, -2220, 30, 30, scaled_texture_ruby_coin),
+        (RED, 300, -2220, 30, 30, scaled_texture_ruby_coin),
         (RED, 394, -3720 ,30,30 ,scaled_texture_ruby_coin), #block 1
         (RED, 357, -3998 ,30,30 ,scaled_texture_ruby_coin), #block 2
         (RED, 510, -3837 ,30,30 ,scaled_texture_ruby_coin), #block 3
@@ -304,7 +333,12 @@ def start_game():
     ]
     origin_gold_coins = [
         (YELLOW, 350, -445, 30, 30, scaled_texture_gold_coin),
-        (YELLOW, 850, -370,30,30,scaled_texture_gold_coin) ,
+        (YELLOW,145,-3050,30,30,scaled_texture_gold_coin),
+        (YELLOW, 747, -5020, 30, 30, scaled_texture_gold_coin),
+        (YELLOW, 183, -136, 30, 30, scaled_texture_gold_coin),
+        (YELLOW, 145, -3050, 30, 30, scaled_texture_gold_coin),
+        (YELLOW, 150, -1400, 30, 30, scaled_texture_gold_coin),
+        (YELLOW, 250, -2000, 30, 30, scaled_texture_gold_coin),
     ]
     #coin erstellen r
     def create_ruby_coins():
@@ -354,7 +388,6 @@ def start_game():
                 gameactive = False
             elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                 menu()
-
 
         player1.KeyPress()
         camera_offset_y = player1.rect.y - screen_height / 2
@@ -419,7 +452,7 @@ def start_game():
                 pygame.mixer.Sound.set_volume(collect, 0.1)
                 pygame.mixer.Sound.play(collect)
                 del list_gold_coins[i]
-                score += 2
+                score += 3
 
         # Enemy-Kollision
         for enemy in list_enemy:
@@ -452,7 +485,7 @@ def start_game():
                 player1.texture = scaled_image_player1_hit
             else:
                 player1.texture = scaled_image_player1
-            if current_time - hitmoment >= 10000000:
+            if current_time - hitmoment >= 1000:
                 player1.texture = scaled_image_player1
                 invincible = False
                 player1.f = RED
