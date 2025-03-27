@@ -164,6 +164,7 @@ def start_game():
     Platform(WHITE, 500, -2170, 100, 15, texture=scaled_image_platform2),
     Platform(WHITE, 270, -2170, 100, 15, texture=scaled_image_platform2),
     Platform(WHITE, 300, -2570, 100, 15, texture=scaled_image_platform2),
+
     Platform(WHITE, 700, -4500, 100, 15, texture=scaled_image_platform2),
     Platform(WHITE, 600, -4720, 100, 15, texture=scaled_image_platform2),
     Platform(WHITE,300, -4720, 100, 15, texture=scaled_image_platform2),
@@ -288,6 +289,18 @@ def start_game():
     origin_ruby_coins = [
         (RED, 723, -29, 30, 30, scaled_texture_ruby_coin),
         (RED,183, -136,30,30 ,scaled_texture_ruby_coin),
+        (RED, 394, -3720 ,30,30 ,scaled_texture_ruby_coin), #block 1
+        (RED, 357, -3998 ,30,30 ,scaled_texture_ruby_coin), #block 2
+        (RED, 510, -3837 ,30,30 ,scaled_texture_ruby_coin), #block 3
+        (RED, 110, -4150 ,30,30 ,scaled_texture_ruby_coin), #block 4
+        (RED, 609, -4100 ,30,30 ,scaled_texture_ruby_coin), #block 5
+
+        (RED, 635, -4760, 30,30 ,scaled_texture_ruby_coin), #last 3 flying platforms
+        (RED, 335, -4760 ,30,30 ,scaled_texture_ruby_coin), #
+        (RED, 735, -4540 ,30,30 ,scaled_texture_ruby_coin), #
+
+
+
     ]
     origin_gold_coins = [
         (YELLOW, 350, -445, 30, 30, scaled_texture_gold_coin),
@@ -439,7 +452,7 @@ def start_game():
                 player1.texture = scaled_image_player1_hit
             else:
                 player1.texture = scaled_image_player1
-            if current_time - hitmoment >= 1000:
+            if current_time - hitmoment >= 10000000:
                 player1.texture = scaled_image_player1
                 invincible = False
                 player1.f = RED
