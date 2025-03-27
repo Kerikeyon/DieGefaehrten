@@ -309,7 +309,6 @@ def start_game():
     origin_gold_coins = [
         (YELLOW, 350, -445, 30, 30, scaled_texture_gold_coin),
         (YELLOW,145,-3050,30,30,scaled_texture_gold_coin),
-        (YELLOW, 850, -370,30,30,scaled_texture_gold_coin) ,
         (YELLOW, 747, -5020, 30, 30, scaled_texture_gold_coin)
     ]
     #coin erstellen r
