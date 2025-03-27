@@ -55,6 +55,7 @@ def start_game():
     scaled_image_platform2 = pygame.transform.scale(texture_flying_plattform, (100,35))
     texture_brick_block = pygame.image.load(r"Texture/BrickBlock.png")
     scaled_brick_block = pygame.transform.scale(texture_brick_block, (50, 50))
+    scaled_brick_block_small = pygame.transform.scale(texture_brick_block, (15, 25))
 
     texture_slippery_middle = pygame.image.load(r"Texture/SlipperyMitte.png")
     scaled_slippery_middle = pygame.transform.scale(texture_slippery_middle, (50, 88))
@@ -99,6 +100,7 @@ def start_game():
     texture_slope_right = pygame.image.load(r"Texture/RutscheRechts.png")
     scaled_slope_right = pygame.transform.scale(texture_slope_right, (50, 50))
     scaled_slope_right2 = pygame.transform.scale(texture_slope_right, (35, 35))
+    scaled_slope_right3 = pygame.transform.scale(texture_slope_right, (100, 100))
     texture_slope_left = pygame.image.load(r"Texture/RutscheLinks.png")
     scaled_slope_left = pygame.transform.scale(texture_slope_left, (50, 50))
     scaled_slope_left2 = pygame.transform.scale(texture_slope_left, (35, 35))
@@ -211,12 +213,18 @@ def start_game():
 
     Platform(WHITE, 537, -1101, 451, 47, texture=texture_right_beam),
     Platform(WHITE,425 ,-717,50,324, texture=texture_stone_pole_short),
+
+    Platform(WHITE, 760, -4975, 15, 25, texture=scaled_brick_block_small),
+    Platform(WHITE, 760, -4950, 15, 25, texture=scaled_brick_block_small),
+    Platform(WHITE, 760, -4925, 15, 25, texture=scaled_brick_block_small),
+    Platform(WHITE, 760, -4900, 15, 25, texture=scaled_brick_block_small)
     ]
     winscreen = WinScreen(Cx-1,20000,500,500,texture_WinScreen)
 
     #Liste Rutschen
     list_slopes = [
         Slope(RED, 442, -767, 60, "right", texture=scaled_slope_right),
+        Slope(RED, 775, -4975, 100, "right", texture=scaled_slope_right3)
         #Slope(RED,0,-2463,35,"right", texture=scaled_slope_right2),
         #Slope(RED,965,-2463,35,"left",texture=scaled_slope_left2)
         #Slippery1
@@ -283,6 +291,7 @@ def start_game():
     origin_gold_coins = [
         (YELLOW, 350, -445, 30, 30, scaled_texture_gold_coin),
         (YELLOW, 850, -370,30,30,scaled_texture_gold_coin) ,
+        (YELLOW, 747, -5020, 30, 30, scaled_texture_gold_coin)
     ]
     #coin erstellen r
     def create_ruby_coins():
@@ -332,7 +341,6 @@ def start_game():
                 gameactive = False
             elif event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
                 menu()
-
 
         player1.KeyPress()
         camera_offset_y = player1.rect.y - screen_height / 2
