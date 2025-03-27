@@ -216,22 +216,18 @@ def start_game():
     Platform(WHITE, 537, -1101, 451, 47, texture=texture_right_beam),
     Platform(WHITE,425 ,-717,50,324, texture=texture_stone_pole_short),
 
-    Platform(WHITE, 760, -4975, 15, 25, texture=scaled_brick_block_small),
-    Platform(WHITE, 760, -4950, 15, 25, texture=scaled_brick_block_small),
-    Platform(WHITE, 760, -4925, 15, 25, texture=scaled_brick_block_small),
-    Platform(WHITE, 760, -4900, 15, 25, texture=scaled_brick_block_small)
+    Platform(WHITE, 30, -4875, 15, 25, texture=scaled_brick_block_small),
+    Platform(WHITE, 30, -4850, 15, 25, texture=scaled_brick_block_small),
+    Platform(WHITE, 30, -4825, 15, 25, texture=scaled_brick_block_small),
+    Platform(WHITE, 30, -4800, 15, 25, texture=scaled_brick_block_small)
     ]
     winscreen = WinScreen(Cx-1,20000,500,500,texture_WinScreen)
 
     #Liste Rutschen
     list_slopes = [
         Slope(RED, 442, -767, 60, "right", texture=scaled_slope_right),
-        Slope(RED, 775, -4975, 100, "right", texture=scaled_slope_right3)
-        #Slope(RED,0,-2463,35,"right", texture=scaled_slope_right2),
-        #Slope(RED,965,-2463,35,"left",texture=scaled_slope_left2)
-        #Slippery1
-        #Slope(RED, 650,-2599,55,"left",texture=scaled_slippery_left),
-        #Slope (RED, 700, -2599, 55,"right",texture=scaled_slippery_right),
+        Slope(RED, 45, -4875, 100, "right", texture=scaled_slope_right3)
+
     ]
     #Liste Gegner
     list_enemy = \
@@ -306,9 +302,9 @@ def start_game():
         (RED, 457, -3150, 30, 30, scaled_texture_ruby_coin),
         (RED, 457, -3400, 30, 30, scaled_texture_ruby_coin),
 
-        (RED, 300, 500, 30, 30, scaled_texture_ruby_coin),
-        (RED, 400, 500, 30, 30, scaled_texture_ruby_coin),
-        (RED, 500, 400, 30, 30, scaled_texture_ruby_coin),
+        (RED, 300, 530, 30, 30, scaled_texture_ruby_coin),
+        (RED, 400, 530, 30, 30, scaled_texture_ruby_coin),
+        (RED, 500, 420, 30, 30, scaled_texture_ruby_coin),
         (RED, 700, 360, 30, 30, scaled_texture_ruby_coin),
         (RED, 400, 150, 30, 30, scaled_texture_ruby_coin),
         #(RED, 850, -370, 30, 30, scaled_texture_ruby_coin),
@@ -334,7 +330,6 @@ def start_game():
     origin_gold_coins = [
         (YELLOW, 350, -445, 30, 30, scaled_texture_gold_coin),
         (YELLOW,145,-3050,30,30,scaled_texture_gold_coin),
-        (YELLOW, 747, -5020, 30, 30, scaled_texture_gold_coin),
         (YELLOW, 183, -136, 30, 30, scaled_texture_gold_coin),
         (YELLOW, 145, -3050, 30, 30, scaled_texture_gold_coin),
         (YELLOW, 150, -1400, 30, 30, scaled_texture_gold_coin),
@@ -370,7 +365,7 @@ def start_game():
     ]
 
     # Ziel erstellen
-    goal1 = Goal(WHITE, 200, -5000, 60, 80,texture=scaled_texture_trophy)
+    goal1 = Goal(WHITE, 300, -5150, 60, 80,texture=scaled_texture_trophy)
     # Deathzone erstellen
     deathzone1 = Deathzone(WHITE, -1000, 900, 20000, 20000)
     # Spieler erstellen
@@ -530,18 +525,6 @@ def start_game():
                 pygame.display.flip()
                 clock.tick(60)
 
-        # Deathzone Kollision
-        """if player1.rect.colliderect(deathzone1.rect):
-            if not reset_triggered:
-                reset_triggered = True  # Reset nur einmal auslösen
-                player1 = Player(RED, Cx - 25, 450, 50, 50, texture=scaled_image_player1)
-                list_ruby_coins[:] = create_ruby_coins()
-                list_gold_coins[:] = create_gold_coins()
-                score = 0
-                invincible = False
-                hitpoints = 3
-        else:
-            reset_triggered = False"""
 
         # Spieler-Reset
         if hitpoints <= 0:
