@@ -174,6 +174,7 @@ def start_game():
     Platform(WHITE, 850, -2800, 50, 50, texture=scaled_slippery_middle),
     Platform(WHITE, 650, -2900, 50, 50, texture=scaled_slippery_middle),
     Platform(WHITE, 450, -3000, 50, 50, texture=scaled_slippery_middle),
+    Platform(WHITE,140,-3000, 50, 50, texture=scaled_slippery_middle),
 
     Platform(WHITE, 70, -3860,50,50, texture=scaled_brick_block),
     Platform(WHITE, 100, -4106, 50, 50, texture=scaled_brick_block),
@@ -236,14 +237,23 @@ def start_game():
         [Enemy_Horizontal(BLUE, 200, 100, 75, 75, 4,movrange=150, texture=scaled_horizontal_enemy),
         Enemy_Horizontal(BLUE, 700, -700,75,75,4,movrange=180, texture=scaled_horizontal_enemy),
         Enemy_Horizontal(BLUE, 400, -2250,75,75,5,movrange=150,texture=scaled_horizontal_enemy),
+        Enemy_Horizontal(BLUE, 600, -1900,75,75,5,movrange=150,texture=scaled_horizontal_enemy),
+
         Enemy_Vertical(BLUE,335, -3300, 75,75,10,movrange=250, texture=scaled_vertical_enemy),
         Enemy_Vertical(BLUE,535, -3300,75,75,10,movrange=250,texture=scaled_vertical_enemy),
-        Enemy_Vertical(BLUE,470,-4850,75,75,5,movrange=100,texture=scaled_horizontal_enemy),
+        Enemy_Vertical(BLUE,735, -3000,75,75,10,movrange=250,texture=scaled_vertical_enemy),
+        Enemy_Vertical(BLUE,120,-2400,75,75,7,movrange=250,texture=scaled_vertical_enemy),
+
+
+        Enemy_Vertical(BLUE,470,-4850,75,75,3,movrange=100,texture=scaled_vertical_enemy),
                   ]
 
     list_static_enemy = \
         [Static_Enemy(BLUE, 60, -445, 200, 50, texture=scaled_spikes),
          Static_Enemy(BLUE, 500, 530, 100, 50, texture=scaled_short_spikes),
+         Static_Enemy(BLUE, 600, 530, 100, 50, texture=scaled_short_spikes),
+         Static_Enemy(BLUE, 700, 530, 100, 50, texture=scaled_short_spikes),
+         Static_Enemy(BLUE, 800, 530, 100, 50, texture=scaled_short_spikes),
          Static_Enemy(BLUE, 560, -1138, 200,50, texture=scaled_spikes),
          Static_Enemy(BLUE, 760, -1138, 200, 50, texture=scaled_spikes),
          Static_Enemy(BLUE, 700, -350, 100, 50, texture=scaled_short_spikes),
@@ -290,6 +300,8 @@ def start_game():
     ]
     origin_gold_coins = [
         (YELLOW, 350, -445, 30, 30, scaled_texture_gold_coin),
+        (YELLOW, 850, -370,30,30,scaled_texture_gold_coin),
+        (YELLOW,145,-3050,30,30,scaled_texture_gold_coin),
         (YELLOW, 850, -370,30,30,scaled_texture_gold_coin) ,
         (YELLOW, 747, -5020, 30, 30, scaled_texture_gold_coin)
     ]
@@ -405,7 +417,7 @@ def start_game():
                 pygame.mixer.Sound.set_volume(collect, 0.1)
                 pygame.mixer.Sound.play(collect)
                 del list_gold_coins[i]
-                score += 2
+                score += 3
 
         # Enemy-Kollision
         for enemy in list_enemy:
