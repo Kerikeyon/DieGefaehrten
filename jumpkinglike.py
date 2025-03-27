@@ -172,6 +172,7 @@ def start_game():
     Platform(WHITE, 850, -2800, 50, 50, texture=scaled_slippery_middle),
     Platform(WHITE, 650, -2900, 50, 50, texture=scaled_slippery_middle),
     Platform(WHITE, 450, -3000, 50, 50, texture=scaled_slippery_middle),
+    Platform(WHITE,140,-3000, 50, 50, texture=scaled_slippery_middle),
 
     Platform(WHITE, 70, -3860,50,50, texture=scaled_brick_block),
     Platform(WHITE, 100, -4106, 50, 50, texture=scaled_brick_block),
@@ -291,7 +292,8 @@ def start_game():
     ]
     origin_gold_coins = [
         (YELLOW, 350, -445, 30, 30, scaled_texture_gold_coin),
-        (YELLOW, 850, -370,30,30,scaled_texture_gold_coin) ,
+        (YELLOW, 850, -370,30,30,scaled_texture_gold_coin),
+        (YELLOW,145,-3050,30,30,scaled_texture_gold_coin),
     ]
     #coin erstellen r
     def create_ruby_coins():
@@ -406,7 +408,7 @@ def start_game():
                 pygame.mixer.Sound.set_volume(collect, 0.1)
                 pygame.mixer.Sound.play(collect)
                 del list_gold_coins[i]
-                score += 2
+                score += 3
 
         # Enemy-Kollision
         for enemy in list_enemy:
